@@ -1,9 +1,11 @@
 package me.skripsi.rekomendasibeliapp.ui
 
+import androidx.compose.runtime.Composable
+
 data class UiState<T>(
     val isLoading: Boolean = false,
-    val data: T?,
-    val message: String?
+    val data: T? = null,
+    val message: String? = null
 ){
 
     fun showUI(
@@ -14,6 +16,20 @@ data class UiState<T>(
         if (!isLoading){
             data?.let(onSuccess)
             message?.let(onError)
+        }else{
+            onLoading.invoke()
+        }
+    }
+
+    @Composable
+    fun showUIComposable(
+        onLoading: @Composable () -> Unit = {},
+        onSuccess:@Composable (data: T) -> Unit,
+        onError:@Composable (message: String) -> Unit
+    ){
+        if (!isLoading){
+            data?.let { onSuccess.invoke(it) }
+            message?.let{onError.invoke(it)}
         }else{
             onLoading.invoke()
         }
