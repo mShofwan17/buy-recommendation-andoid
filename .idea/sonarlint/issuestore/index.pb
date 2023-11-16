@@ -3,8 +3,6 @@ C
 settings.gradle.kts,7\4\749edfcc96398253e5b3416184e95c46621da850
 @
 build.gradle.kts,d\b\dbcff70658daf80b53ce624f6adcaa529df5ed8d
-G
-roomDb/build.gradle.kts,6\0\60e4c898472628c3ecfcc8ed0f2eb047359c0b9a
 t
 DroomDb/src/main/java/me/skripsi/roomdb/entity/DataTransaksiEntity.kt,0\4\048f57b59ccb97ecefaddc331a20194f2e9fedd5
 s
@@ -13,8 +11,6 @@ n
 >roomDb/src/main/java/me/skripsi/roomdb/dao/DataTransaksiDao.kt,d\1\d157d0a7e7aaec6622cda1f1c13f403a6ac06236
 m
 =roomDb/src/main/java/me/skripsi/roomdb/dao/DataTrainingDao.kt,9\c\9ce038aafa692a5692e79ba1c1b3c3c9ba00d156
-p
-@roomDb/src/main/java/me/skripsi/roomdb/BuyRecommendedDatabase.kt,f\3\f3da4c0a935262b4192120997fe50628f7f49e30
 g
 7roomDb/src/main/java/me/skripsi/roomdb/di/RoomModule.kt,2\5\25833e6c1aceb15962614a6b4a5f5aa5638b2ca0
 m
