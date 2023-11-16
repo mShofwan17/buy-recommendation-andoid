@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Rekomendasi Beli App</string>
+    <string name="image_home">image_home</string>
+    <string name="data_transaksi">Data Transaksi</string>
+    <string name="data_tranining">Data Training</string>
+    <string name="uji_data">Uji Data</string>
 </resources>
