@@ -17,5 +17,5 @@ interface DataTrainingDao {
     suspend fun addDataTraining(dataTraining: DataTrainingEntity): Long
 
     @Delete
-    suspend fun delete(dataTransaksiEntity: DataTransaksiEntity): Long
+    suspend fun delete(dataTraining: DataTrainingEntity): Int
 }

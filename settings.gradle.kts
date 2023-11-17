@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 rootProject.name = "Rekomendasi Beli App"
 include(":app")
 include(":roomDb")
-include(":naiveBayes")
+//include(":naiveBayes")
 include(":core")
 include(":data")
 include(":domain")

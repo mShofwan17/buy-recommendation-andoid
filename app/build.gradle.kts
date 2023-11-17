@@ -2,16 +2,17 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "me.skripsi.rekomendasibeliapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "me.skripsi.rekomendasibeliapp"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -51,6 +52,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":domain"))
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -67,4 +70,18 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //hilt
+    implementation ("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-compiler:2.47")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.6.0")
+
+    //viewModel compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    // Lifecycle utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    //hilt compose
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
