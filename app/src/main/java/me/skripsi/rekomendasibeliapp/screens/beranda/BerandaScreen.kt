@@ -139,7 +139,7 @@ fun BerandaContent(
                 title = stringResource(R.string.uji_data),
                 backgroundColor = Color.Blue,
                 onClick = {
-                    navHostController?.navigate(Screens.FormUji.route)
+                    navHostController?.navigate(Screens.ProductSelected.route)
                 }
             )
         }

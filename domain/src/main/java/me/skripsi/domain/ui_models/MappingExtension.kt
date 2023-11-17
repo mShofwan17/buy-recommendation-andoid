@@ -31,3 +31,13 @@ fun DataTraining.toUiDataTraining(): UiDataTraining {
         )
     }
 }
+
+fun DataTransaksi.toUiProductSelected(): UiProductSelected{
+    this.apply {
+        return UiProductSelected(
+            kodeBarang = kodeBarang,
+            namaBarang = namaBarang,
+            kategori = golongan
+        )
+    }
+}
