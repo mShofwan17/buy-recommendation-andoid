@@ -1,4 +1,24 @@
 package me.skripsi.domain.usecases.beranda
 
-class CheckIsDataExistUseCase {
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import me.skripsi.data.repository.beranda.BerandaRepository
+import javax.inject.Inject
+
+class CheckIsDataExistUseCase @Inject constructor(
+    private val repository: BerandaRepository
+) {
+    operator fun invoke(): Flow<Boolean>{
+        return flow {
+            try {
+                val result = repository.isDataTransaksiExist()
+                emit(result)
+            }catch (e:Exception){
+                emit(false)
+            }
+
+        }.flowOn(Dispatchers.IO)
+    }
 }

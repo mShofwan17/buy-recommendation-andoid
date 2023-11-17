@@ -7,27 +7,20 @@ import kotlinx.coroutines.flow.flowOn
 import me.skripsi.data.models.DataTransaksi
 import me.skripsi.data.repository.list_data.ListDataUjiRepository
 import me.skripsi.domain.ui_models.UiDataTransaksi
+import me.skripsi.domain.ui_models.toUiDataTransaksi
 import javax.inject.Inject
 
 class GetListDataTransaksiUseCase @Inject constructor(
     private val repository: ListDataUjiRepository
 ) {
-    operator fun invoke(): Flow<List<UiDataTransaksi>>{
+    operator fun invoke(): Flow<List<UiDataTransaksi>> {
         return flow {
-            val dataTransaksi = repository.getDataTransaksi()
-                .map {
-                    UiDataTransaksi(
-                        id = it.id,
-                        kodeBarang = it.kodeBarang,
-                        namaBarang = it.namaBarang,
-                        golongan = it.golongan,
-                        stok = it.stok,
-                        isDiskon = it.isDiskon,
-                        penjualan = it.penjualan,
-                        pembelian = it.pembelian
-                    )
-                }
-            emit(dataTransaksi)
+            try {
+                val result = repository.getDataTransaksi().map { it.toUiDataTransaksi() }
+                emit(result)
+            } catch (e: Exception) {
+                emit(listOf())
+            }
         }.flowOn(Dispatchers.IO)
     }
 }

@@ -11,5 +11,9 @@ sealed class Screens(val route: String){
     object DetailHasilUji: Screens(DETAIL_HASIL_UJI)
     object FormUji: Screens(FORM_UJI)
     object HasilUji: Screens(HASIL_UJI)
-    object ListData: Screens(LIST_DATA)
+    object ListData: Screens("$LIST_DATA/{isFromTransaksi}"){
+        fun passBoolean(isFromTransaksi: Boolean): String{
+            return "$LIST_DATA/$isFromTransaksi"
+        }
+    }
 }

@@ -2,7 +2,7 @@ package me.skripsi.domain.ui_models
 
 data class UiDataTransaksi(
     val id: Long,
-    val kodeBarang: String?,
+    val kodeBarang: String? = "",
     val namaBarang: String?,
     val golongan: String? = "",
     val stok: Int = 0,
