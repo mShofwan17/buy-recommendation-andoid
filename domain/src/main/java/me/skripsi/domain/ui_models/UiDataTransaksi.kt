@@ -7,6 +7,6 @@ data class UiDataTransaksi(
     val golongan: String? = "",
     val stok: Int = 0,
     val isDiskon: Short = 0,
-    val penjualan: Double = 0.0,
-    val pembelian: Double = 0.0
+    val penjualan: Int = 0,
+    val pembelian: Int = 0
 )

@@ -11,7 +11,7 @@ data class DataUji(
     val golongan: String?,
     val stok: Int = 0,
     val isDiskon: Boolean = false,
-    val penjualan: Double = 0.0,
+    val penjualan: Int = 0,
 ){
     fun toDataUjiEntity(): DataUjiEntity{
         return DataUjiEntity(

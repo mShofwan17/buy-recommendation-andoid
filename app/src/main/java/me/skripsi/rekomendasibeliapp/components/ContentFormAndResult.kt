@@ -186,10 +186,10 @@ fun FormDataUjiView(
         textLabel = stringResource(R.string.penjualan),
         content = VerticalSmallLabelBigContentState.InputText {
             MyInputText(
-                text = if (dataUji.penjualan.toInt() == 0) ""
-                else dataUji.penjualan.toInt().toString(),
+                text = if (dataUji.penjualan == 0) ""
+                else dataUji.penjualan.toString(),
                 onTextChange = {
-                    val convert = it.toDouble()
+                    val convert = it.toInt()
                     onDataChange(
                         DataUjiChangedState.Penjualan(convert)
                     )
@@ -268,7 +268,7 @@ fun ContentFormDataUjiPrev() {
         golongan = "MAKANAN",
         stok = 0,
         isDiskon = false,
-        penjualan = 0.0
+        penjualan = 0
     )
 
     ContentFormAndResult(dataUji = data) {
