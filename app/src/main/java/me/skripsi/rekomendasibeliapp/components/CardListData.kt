@@ -219,8 +219,8 @@ fun CardListDataPreview() {
         golongan = "MAKANAN",
         stok = 100,
         isDiskon = 1,
-        penjualan = 40.0,
-        pembelian = 10.0
+        penjualan = 40,
+        pembelian = 10
     )
 
     Column(

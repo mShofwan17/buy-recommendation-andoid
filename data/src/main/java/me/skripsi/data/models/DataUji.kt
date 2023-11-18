@@ -11,7 +11,7 @@ data class DataUji(
     val golongan: String?,
     val stok: Int = 0,
     val isDiskon: Boolean = false,
-    val penjualan: Double = 0.0,
+    val penjualan: Int = 0,
 ){
     fun toDataUjiEntity(): DataUjiEntity{
         return DataUjiEntity(
@@ -25,15 +25,14 @@ data class DataUji(
         )
     }
 
-    fun toDataUjiCalculate(items: List<DataTraining>): DataUjiCalculate {
+    fun toDataUjiCalculate(): DataUjiCalculate {
         return DataUjiCalculate(
             kodeBarang = kodeBarang ?: "",
             namaBarang = namaBarang ?: "",
             kategori = golongan ?: "",
             stok = stok.labeledStok(),
             isDiskon = isDiskon,
-            penjualan = penjualan.toInt().labeledPenjualan(),
-            items = items
+            penjualan = penjualan.labeledPenjualan()
         )
     }
 }

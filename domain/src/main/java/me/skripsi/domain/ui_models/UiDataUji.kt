@@ -11,7 +11,7 @@ data class UiDataUji(
     val golongan: String?,
     val stok: Int = 0,
     val isDiskon: Boolean = false,
-    val penjualan: Double = 0.0,
+    val penjualan: Int = 0,
 ){
     fun toDataUji(): DataUji{
         return DataUji(
@@ -33,7 +33,7 @@ data class UiDataUji(
             golongan = golongan,
             stok = stok.labeledStok(),
             isDiskon = isDiskon,
-            penjualan = penjualan.toInt().labeledPenjualan(),
+            penjualan = penjualan.labeledPenjualan(),
             pembelian = false
         )
     }
