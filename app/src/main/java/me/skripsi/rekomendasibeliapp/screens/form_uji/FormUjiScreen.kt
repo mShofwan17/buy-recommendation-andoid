@@ -2,6 +2,7 @@ package me.skripsi.rekomendasibeliapp.screens.form_uji
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +26,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.rekomendasibeliapp.R
-import me.skripsi.rekomendasibeliapp.components.ContentFormDataUji
+import me.skripsi.rekomendasibeliapp.components.ContentFormAndResult
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
 import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedState
@@ -51,12 +52,12 @@ fun FormUjiScreen(
             items = dataUjis,
             viewModel = viewModel
         )
+        Spacer(modifier = Modifier.padding(top = 8.dp, end = 8.dp))
         MyButton(
             title = stringResource(id = R.string.uji_data),
             icon = Icons.Default.CheckCircle,
             backgroundColor = Color.Blue
         ) {
-
             scope.launch {
                 async { viewModel.updateDataUji(dataUjis) }.await()
                 navHostController.navigate(Screens.HasilUji.route)
@@ -78,7 +79,7 @@ fun ListFormDataUji(
     ) {
         items(items.size) {
             var item by remember { mutableStateOf(items[it]) }
-            ContentFormDataUji(
+            ContentFormAndResult(
                 dataUji = item,
                 onDataChange = {
                     it.apply {

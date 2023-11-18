@@ -3,6 +3,8 @@ package me.skripsi.domain.ui_models
 import me.skripsi.data.models.DataTraining
 import me.skripsi.data.models.DataTransaksi
 import me.skripsi.data.models.DataUji
+import me.skripsi.data.models.ResultNaiveBayes
+import me.skripsi.data.naiveBayes.recommendation
 
 fun DataTransaksi.toUiDataTransaksi() : UiDataTransaksi{
     this.apply {
@@ -53,6 +55,18 @@ fun DataUji.toUiDataUji(): UiDataUji{
             stok = stok,
             isDiskon = isDiskon,
             penjualan = penjualan
+        )
+    }
+}
+
+fun ResultNaiveBayes.toBuyRecommendation(dataTraining: UiDataTraining?): UiBuyRecommendation{
+    this.apply {
+        return UiBuyRecommendation(
+            dataTraining = dataTraining,
+            positiveResult = positiveResult,
+            negativeResult = negativeResult,
+            result = result,
+            recommendation = result.recommendation()
         )
     }
 }

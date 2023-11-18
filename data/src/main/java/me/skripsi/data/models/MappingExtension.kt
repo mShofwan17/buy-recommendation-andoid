@@ -7,6 +7,7 @@ import me.skripsi.data.naiveBayes.labeledStok
 import me.skripsi.roomdb.entity.DataTrainingEntity
 import me.skripsi.roomdb.entity.DataTransaksiEntity
 import me.skripsi.roomdb.entity.DataUjiEntity
+import me.skripsi.roomdb.entity.ResultNaiveBayesEntity
 
 fun DataTransaksiEntity.toDataTransaksi() : DataTransaksi{
     this.apply {
@@ -65,4 +66,13 @@ fun DataUjiEntity.toDataUji(): DataUji{
             penjualan = penjualan
         )
     }
+}
+
+fun ResultNaiveBayesEntity.toResultNaiveBayes() : ResultNaiveBayes {
+    return ResultNaiveBayes(
+        kodeBarang = kodeBarang,
+        positiveResult = positiveResult,
+        negativeResult = negativeResult,
+        result = result
+    )
 }

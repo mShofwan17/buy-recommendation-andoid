@@ -14,14 +14,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import me.skripsi.rekomendasibeliapp.R
 import me.skripsi.rekomendasibeliapp.components.CardHome
+import me.skripsi.rekomendasibeliapp.components.LoadingContent
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
 
@@ -59,34 +58,22 @@ fun BerandaScreen(
         val insertState = berandaViewModel.insertDataState.collectAsState()
         insertState.value.showUIComposable(
             onLoading = {
-                LoadingContent(modifier = Modifier.padding(paddingValues))
+                LoadingContent(
+                    modifier = Modifier.padding(paddingValues),
+                    labelLoading = "Download Data..."
+                )
             },
             onSuccess = {
-                BerandaContent(modifier = Modifier.padding(paddingValues), navHostController = navHostController)
+                BerandaContent(
+                    modifier = Modifier.padding(paddingValues),
+                    navHostController = navHostController
+                )
             },
             onError = {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         )
 
-    }
-}
-
-@Composable
-fun LoadingContent(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.padding(bottom = 10.dp),
-            color = Color.Blue
-        )
-        Text(text = "Download Data...")
     }
 }
 
@@ -150,5 +137,5 @@ fun BerandaContent(
 @Composable
 @Preview
 fun Preview() {
-    LoadingContent()
+    // LoadingContent()
 }

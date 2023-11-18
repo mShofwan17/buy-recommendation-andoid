@@ -1,5 +1,12 @@
 package me.skripsi.data.naiveBayes
 
+import java.math.BigDecimal
+import java.text.DecimalFormat
+
+fun Boolean.recommendation(): String {
+    return if (this) "Rekomendasi Beli"
+    else "Rekomendasi Tidak Beli"
+}
 
 fun Int.labeledStok(): String {
     return when {
@@ -21,4 +28,18 @@ fun Int.labeledPenjualan(): String {
 }
 fun Int.classPembelian(): Boolean {
     return this > 0
+}
+
+fun Double.decimalFormat() : Double{
+    val df = DecimalFormat("#")
+    df.maximumFractionDigits = 4
+
+    return df.format(this).toDouble()
+}
+
+fun BigDecimal.decimalFormat() : BigDecimal {
+    val df = DecimalFormat("#")
+    df.maximumFractionDigits = 5
+
+    return df.format(this).toBigDecimal()
 }
