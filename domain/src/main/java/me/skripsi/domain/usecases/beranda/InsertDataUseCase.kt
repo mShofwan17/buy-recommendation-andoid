@@ -10,12 +10,12 @@ import javax.inject.Inject
 class InsertDataUseCase @Inject constructor(
     private val repository: BerandaRepository
 ) {
-    operator fun invoke(): Flow<Boolean>{
+    operator fun invoke(): Flow<Boolean> {
         return flow {
             try {
                 val result = repository.insertDataTraining()
                 emit(result)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 emit(false)
             }
 

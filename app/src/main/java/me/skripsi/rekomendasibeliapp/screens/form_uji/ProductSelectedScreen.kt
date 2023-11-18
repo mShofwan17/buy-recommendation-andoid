@@ -55,6 +55,7 @@ fun ProductSelectedScreen(
                 ) {
                     val itemsSelected = selectedProduct.filter { it.isSelected }
                     viewModel.saveSelectedData(itemsSelected).also {
+                        viewModel.getAllDataUji()
                         navHostController.navigate(Screens.FormUji.route)
                     }
                 }

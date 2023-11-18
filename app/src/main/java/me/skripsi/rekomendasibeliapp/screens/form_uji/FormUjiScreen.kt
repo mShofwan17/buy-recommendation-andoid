@@ -1,5 +1,6 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +38,6 @@ fun FormUjiScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         ListFormDataUji(
             modifier = Modifier.fillMaxWidth()
                 .weight(1f),

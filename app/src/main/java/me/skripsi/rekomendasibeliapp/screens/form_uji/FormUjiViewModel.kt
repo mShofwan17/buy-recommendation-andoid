@@ -1,11 +1,13 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -60,7 +62,7 @@ class FormUjiViewModel @Inject constructor(
     fun saveSelectedData(items:List<UiProductSelected>){
         viewModelScope.launch {
             val dataUji = items.map { it.toDataUji() }
-            saveDataUjiUseCase(dataUji)
+            saveDataUjiUseCase(dataUji).collect()
         }
     }
 
