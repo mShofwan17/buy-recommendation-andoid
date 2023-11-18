@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.skripsi.rekomendasibeliapp.ui.theme.BackgroundColorSecondary
 import me.skripsi.rekomendasibeliapp.utils.VerticalSmallLabelBigContentState
+import me.skripsi.rekomendasibeliapp.utils.viewDiskonLabel
 
 @Composable
 fun SideBySideText(
@@ -53,10 +55,12 @@ fun SideBySideText(
 fun VerticalSmallLabelBigContentLayout(
     modifier: Modifier = Modifier,
     textLabel: String,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: VerticalSmallLabelBigContentState
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
+        horizontalAlignment = horizontalAlignment
     ) {
         Text(
             modifier = Modifier.padding(bottom = 2.dp),
@@ -106,9 +110,8 @@ fun MyInputText(
                 imeAction = ImeAction.Next
             ),
             onValueChange = {
-                if (it.isNotEmpty()){
-                    onTextChange(it)
-                }
+                val textChanged = it.ifEmpty { "0" }
+                onTextChange(textChanged)
             },
             textStyle = TextStyle(
                 color = Color.Black
@@ -147,8 +150,9 @@ fun FormCheckBox(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = if (isSelected) "Sedang Diskon" else "Tidak Diskon",
-                modifier = Modifier.padding(start = 16.dp, end = 8.dp)
+                modifier = Modifier.padding(start = 10.dp, end = 2.dp),
+                text = isSelected.viewDiskonLabel(),
+                fontSize = MaterialTheme.typography.labelLarge.fontSize
             )
             Checkbox(
                 checked = isSelected,
@@ -157,6 +161,25 @@ fun FormCheckBox(
         }
     }
 
+}
+
+@Composable
+fun LoadingContent(
+    modifier: Modifier = Modifier,
+    labelLoading : String
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.padding(bottom = 10.dp),
+            color = Color.Green
+        )
+        Text(text = labelLoading)
+    }
 }
 
 @Preview(showBackground = true)

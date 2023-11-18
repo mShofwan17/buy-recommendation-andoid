@@ -4,14 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,15 +40,12 @@ fun MyButton(
         contentAlignment = Alignment.Center
     ) {
 
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-        ) {
+        Row{
             icon?.let {
                 Icon(
                     modifier = Modifier.padding(
-                        top = 4.dp,
-                        end = 6.dp
+                        top = 2.dp,
+                        end = 10.dp
                     ),
                     imageVector = icon,
                     contentDescription = stringResource(R.string.icon_button),
