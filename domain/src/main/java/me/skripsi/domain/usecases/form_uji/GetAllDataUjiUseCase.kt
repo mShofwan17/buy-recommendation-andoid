@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import me.skripsi.data.models.DataUji
 import me.skripsi.data.repository.form_uji.FormUjiRepository
 import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.domain.ui_models.toUiDataUji

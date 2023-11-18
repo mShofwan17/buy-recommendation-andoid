@@ -1,13 +1,11 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,7 +16,7 @@ import me.skripsi.domain.usecases.form_uji.GetProductSelectedUseCase
 import me.skripsi.domain.usecases.form_uji.SaveDataUjiUseCase
 import me.skripsi.domain.usecases.form_uji.UpdateDataUjiUseCase
 import me.skripsi.rekomendasibeliapp.ui.UiState
-import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedEnum
+import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,47 +32,41 @@ class FormUjiViewModel @Inject constructor(
     private val _selectedProducts = MutableStateFlow<List<UiProductSelected>>(listOf())
     val selectedProducts get() = _selectedProducts.asStateFlow()
 
-    private val _updateDataUjiStatus = MutableStateFlow(false)
-    val updateDataUjiStatus get() = _updateDataUjiStatus.asStateFlow()
-
-
     private val _dataUjis = MutableStateFlow<List<UiDataUji>>(listOf())
-    val dataUjis get() = _dataUjis.asStateFlow()
+    val dataUjis: StateFlow<List<UiDataUji>> = _dataUjis
 
     init {
         getProductSelected()
+        getAllDataUji()
     }
 
     private fun getProductSelected() {
         viewModelScope.launch {
             getProductSelectedUseCase().collectLatest {
                 _productState.update { state ->
-                    if (it.isNotEmpty()){
+                    if (it.isNotEmpty()) {
                         _selectedProducts.value = it
                         state.success(it)
-                    }
-                    else state.error("Gagal mendapatkan data")
+                    } else state.error("Gagal mendapatkan data")
                 }
             }
         }
     }
 
-    fun saveSelectedData(items:List<UiProductSelected>){
+    fun saveSelectedData(items: List<UiProductSelected>) {
         viewModelScope.launch {
             val dataUji = items.map { it.toDataUji() }
-            saveDataUjiUseCase(dataUji).collect()
+            saveDataUjiUseCase(dataUji).collectLatest {}
         }
     }
 
-    fun updateDataUji(items:List<UiDataUji>){
+    fun updateDataUji(items: List<UiDataUji>) {
         viewModelScope.launch {
-            updateDataUjiUseCase(items).collectLatest {
-                _updateDataUjiStatus.value = it
-            }
+            updateDataUjiUseCase(items).collectLatest {}
         }
     }
 
-    fun getAllDataUji(){
+    private fun getAllDataUji() {
         viewModelScope.launch {
             getAllDataUjiUseCase().collectLatest {
                 _dataUjis.value = it
@@ -89,15 +81,15 @@ class FormUjiViewModel @Inject constructor(
         }
     }
 
-    fun updateChangeOnDataUji(item: UiDataUji, stateChange: DataUjiChangedEnum){
+    fun updateChangeOnDataUji(kodeBarang: String?, stateChange: DataUjiChangedState) {
         _dataUjis.value = _dataUjis.value.map {
-            if (it.kodeBarang == item.kodeBarang){
-                when(stateChange){
-                    DataUjiChangedEnum.STOK -> it.copy(stok = item.stok)
-                    DataUjiChangedEnum.DISKON -> it.copy(isDiskon = item.isDiskon)
-                    DataUjiChangedEnum.PENJUALAN -> it.copy(penjualan = item.penjualan)
+            if (it.kodeBarang == kodeBarang) {
+                when (stateChange) {
+                    is DataUjiChangedState.Stok -> it.copy(stok = stateChange.updatedValue)
+                    is DataUjiChangedState.Diskon -> it.copy(isDiskon = stateChange.updatedValue)
+                    is DataUjiChangedState.Penjualan -> it.copy(penjualan = stateChange.updatedValue)
                 }
-            }else it
+            } else it
         }
     }
 

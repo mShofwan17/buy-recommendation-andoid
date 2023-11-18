@@ -1,5 +1,6 @@
 package me.skripsi.domain.usecases.form_uji
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,8 +14,13 @@ class UpdateDataUjiUseCase @Inject constructor(
 ) {
     operator fun invoke(items: List<UiDataUji>) : Flow<Boolean> {
         return flow {
-            val result = repository.updateDataUji(items.map { it.toDataUji() })
-            emit(result)
+            try {
+                val result = repository.updateDataUji(items.map { it.toDataUji() })
+                emit(result)
+            }catch (e: Exception){
+                Log.i("TAG_Exception", "invoke: ${e.message}")
+            }
+
         }.flowOn(Dispatchers.IO)
     }
 }

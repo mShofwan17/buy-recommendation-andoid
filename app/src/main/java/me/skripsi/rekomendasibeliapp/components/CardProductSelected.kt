@@ -40,7 +40,8 @@ fun CardProductSelected(
             .background(Color.White)
     ) {
         Row(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -64,15 +65,19 @@ fun CardProductSelected(
                     fontSize = MaterialTheme.typography.bodyLarge.fontSize
                 )
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(end = 6.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 6.dp),
                     text = "${productSelected.kategori}",
                     color = Color.Black.copy(alpha = 0.5f),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize
                 )
             }
 
-            Checkbox(checked = productSelected.isSelected,
-                onCheckedChange = { onClick.invoke(it) })
+            Checkbox(
+                checked = productSelected.isSelected,
+                onCheckedChange = { onClick.invoke(it) }
+            )
         }
     }
 }

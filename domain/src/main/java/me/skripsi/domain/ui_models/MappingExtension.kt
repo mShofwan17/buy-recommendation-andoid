@@ -46,6 +46,7 @@ fun DataTransaksi.toUiProductSelected(): UiProductSelected{
 fun DataUji.toUiDataUji(): UiDataUji{
     this.apply {
         return UiDataUji(
+            id= id,
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,

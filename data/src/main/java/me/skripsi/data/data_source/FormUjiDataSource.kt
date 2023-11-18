@@ -1,15 +1,11 @@
 package me.skripsi.data.data_source
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import me.skripsi.data.jsonDataMentah
 import me.skripsi.data.models.DataUji
-import me.skripsi.data.models.toDataTrainingEntity
 import me.skripsi.data.models.toDataUji
 import me.skripsi.roomdb.BuyRecommendationDatabase
-import me.skripsi.roomdb.entity.DataTransaksiEntity
 import javax.inject.Inject
 
 class FormUjiDataSource @Inject constructor(
@@ -18,7 +14,9 @@ class FormUjiDataSource @Inject constructor(
     suspend fun saveDataUji(items: List<DataUji>): Boolean = runBlocking {
         return@runBlocking validateResponse {
           async {
-                items.forEach {  dbSource.dataUji().addData(it.toDataUjiEntity()) }
+                items.forEach {
+                    dbSource.dataUji().addData(it.toDataUjiEntity())
+                }
             }.await()
             return@validateResponse dbSource.dataUji().getAll().isNotEmpty()
         }
@@ -26,10 +24,13 @@ class FormUjiDataSource @Inject constructor(
 
     suspend fun updateDataUji(items: List<DataUji>): Boolean = runBlocking {
         return@runBlocking validateResponse {
-            async {
-                items.forEach {  dbSource.dataUji().updateData(it.toDataUjiEntity()) }
+            Log.i("TAG_DataUJi", "updateDataUji: ${items.map { it.toDataUjiEntity()}}")
+           val rowUpdated =  async {
+                dbSource.dataUji().updateData(items.map { it.toDataUjiEntity() })
             }.await()
-            return@validateResponse dbSource.dataUji().getAll().isNotEmpty()
+
+            Log.i("TAG_DataUJi", "updateDataUji: $rowUpdated")
+            return@validateResponse rowUpdated != -1
         }
     }
 

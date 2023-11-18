@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import me.skripsi.rekomendasibeliapp.screens.beranda.BerandaScreen
 import me.skripsi.rekomendasibeliapp.screens.form_uji.FormUjiScreen
 import me.skripsi.rekomendasibeliapp.screens.form_uji.ProductSelectedScreen
+import me.skripsi.rekomendasibeliapp.screens.hasil_uji.HasilUjiScreen
 import me.skripsi.rekomendasibeliapp.screens.list_data.ListDataScreen
 
 @Composable
@@ -33,6 +34,9 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable(route = Screens.FormUji.route){
             FormUjiScreen(navHostController = navController)
+        }
+        composable(route = Screens.HasilUji.route){
+            HasilUjiScreen(navHostController = navController)
         }
     }
 }

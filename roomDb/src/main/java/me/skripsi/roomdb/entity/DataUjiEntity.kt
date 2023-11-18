@@ -1,9 +1,13 @@
 package me.skripsi.roomdb.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tb_data_uji")
+@Entity(
+    tableName = "tb_data_uji",
+    indices = [Index(value = ["kodeBarang"], unique = true)]
+)
 data class DataUjiEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val kodeBarang: String?,

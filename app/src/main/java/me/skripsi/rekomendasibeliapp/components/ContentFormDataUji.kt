@@ -13,10 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,12 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.rekomendasibeliapp.R
+import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedState
 import me.skripsi.rekomendasibeliapp.utils.VerticalSmallLabelBigContentState
 
 @Composable
 fun ContentFormDataUji(
     modifier: Modifier = Modifier,
-    dataUji: UiDataUji
+    dataUji: UiDataUji,
+    onDataChange: (DataUjiChangedState) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -94,9 +92,13 @@ fun ContentFormDataUji(
                     textLabel = stringResource(R.string.stok),
                     content = VerticalSmallLabelBigContentState.InputText {
                         MyInputText(
-                            text = "${dataUji.stok}",
+                            text =  if (dataUji.stok == 0) ""
+                            else dataUji.stok.toString(),
                             onTextChange = {
-
+                                val convert = it.toInt()
+                                onDataChange(
+                                    DataUjiChangedState.Stok(convert)
+                                )
                             }
                         )
                     }
@@ -109,12 +111,13 @@ fun ContentFormDataUji(
                         .padding(start = 8.dp),
                     textLabel = stringResource(R.string.diskon),
                     content = VerticalSmallLabelBigContentState.Spinner {
-                        var isChecked by remember { mutableStateOf(dataUji.isDiskon) }
                         FormCheckBox(
                             modifier = Modifier.fillMaxWidth(),
-                            isSelected = isChecked,
+                            isSelected = dataUji.isDiskon,
                             onClick = {
-                                isChecked = it
+                                onDataChange.invoke(
+                                    DataUjiChangedState.Diskon(it)
+                                )
                             }
                         )
                     }
@@ -127,9 +130,13 @@ fun ContentFormDataUji(
                 textLabel = stringResource(R.string.penjualan),
                 content = VerticalSmallLabelBigContentState.InputText {
                     MyInputText(
-                        text = "${dataUji.penjualan}",
+                        text = if (dataUji.penjualan.toInt() == 0) ""
+                        else dataUji.penjualan.toInt().toString(),
                         onTextChange = {
-
+                            val convert = it.toDouble()
+                            onDataChange(
+                                DataUjiChangedState.Penjualan(convert)
+                            )
                         }
                     )
                 }
@@ -151,5 +158,7 @@ fun ContentFormDataUjiPrev() {
         penjualan = 0.0
     )
 
-    ContentFormDataUji(dataUji = data)
+    ContentFormDataUji(dataUji = data){
+
+    }
 }

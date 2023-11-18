@@ -1,10 +1,9 @@
 package me.skripsi.data.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import me.skripsi.roomdb.entity.DataUjiEntity
 
 data class DataUji(
+    val id: Int = 0,
     val kodeBarang: String?,
     val namaBarang: String?,
     val golongan: String?,
@@ -14,6 +13,7 @@ data class DataUji(
 ){
     fun toDataUjiEntity(): DataUjiEntity{
         return DataUjiEntity(
+            id = id.toLong(),
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,

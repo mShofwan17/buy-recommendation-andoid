@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.skripsi.rekomendasibeliapp.ui.theme.BackgroundColorSecondary
@@ -95,7 +99,17 @@ fun MyInputText(
         TextField(
             modifier = Modifier.fillMaxSize(),
             value = text,
-            onValueChange = { onTextChange(it) },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false,
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            onValueChange = {
+                if (it.isNotEmpty()){
+                    onTextChange(it)
+                }
+            },
             textStyle = TextStyle(
                 color = Color.Black
             ),
@@ -124,9 +138,10 @@ fun FormCheckBox(
             .clip(
                 shape = RoundedCornerShape(6.dp)
             )
-    ){
+    ) {
         Row(
-            modifier =Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(2.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center

@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import me.skripsi.domain.ui_models.UiProductSelected
 import me.skripsi.rekomendasibeliapp.components.CardProductSelected
 import me.skripsi.rekomendasibeliapp.components.MyButton
@@ -31,6 +35,7 @@ fun ProductSelectedScreen(
 ) {
     val context = LocalContext.current
     val productState = viewModel.productState.collectAsState()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -53,11 +58,15 @@ fun ProductSelectedScreen(
                     title = "Lanjut",
                     backgroundColor = Color.Blue
                 ) {
-                    val itemsSelected = selectedProduct.filter { it.isSelected }
-                    viewModel.saveSelectedData(itemsSelected).also {
-                        viewModel.getAllDataUji()
+                    scope.launch {
+                        async {
+                            val itemsSelected = selectedProduct.filter { it.isSelected }
+                            viewModel.saveSelectedData(itemsSelected)
+                        }.await()
                         navHostController.navigate(Screens.FormUji.route)
+                        cancel()
                     }
+
                 }
             },
             onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
@@ -81,7 +90,7 @@ fun ListProductSelected(
                 productSelected = item,
                 onClick = {
                     item = item.copy(isSelected = it)
-                    viewModel.updateSelectedProduct(item.kodeBarang,it)
+                    viewModel.updateSelectedProduct(item.kodeBarang, it)
                 }
             )
         }

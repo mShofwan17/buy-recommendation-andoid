@@ -3,6 +3,7 @@ package me.skripsi.domain.ui_models
 import me.skripsi.data.models.DataUji
 
 data class UiDataUji(
+    val id: Int = 0,
     val kodeBarang: String?,
     val namaBarang: String?,
     val golongan: String?,
@@ -12,6 +13,7 @@ data class UiDataUji(
 ){
     fun toDataUji(): DataUji{
         return DataUji(
+            id = id,
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,

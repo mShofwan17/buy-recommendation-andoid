@@ -56,6 +56,7 @@ fun DataTrainingEntity.toDataTraining(): DataTraining {
 fun DataUjiEntity.toDataUji(): DataUji{
     this.apply {
         return DataUji(
+            id = id.toInt(),
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,
