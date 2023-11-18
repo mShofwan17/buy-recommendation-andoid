@@ -6,6 +6,7 @@ import me.skripsi.data.naiveBayes.labeledPenjualan
 import me.skripsi.data.naiveBayes.labeledStok
 import me.skripsi.roomdb.entity.DataTrainingEntity
 import me.skripsi.roomdb.entity.DataTransaksiEntity
+import me.skripsi.roomdb.entity.DataUjiEntity
 
 fun DataTransaksiEntity.toDataTransaksi() : DataTransaksi{
     this.apply {
@@ -48,6 +49,20 @@ fun DataTrainingEntity.toDataTraining(): DataTraining {
             isDiskon = isDiskon,
             penjualan = penjualan,
             pembelian = pembelian
+        )
+    }
+}
+
+fun DataUjiEntity.toDataUji(): DataUji{
+    this.apply {
+        return DataUji(
+            id = id.toInt(),
+            kodeBarang = kodeBarang,
+            namaBarang = namaBarang,
+            golongan = golongan,
+            stok = stok,
+            isDiskon = isDiskon,
+            penjualan = penjualan
         )
     }
 }

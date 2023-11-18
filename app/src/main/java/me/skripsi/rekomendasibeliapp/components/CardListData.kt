@@ -200,26 +200,6 @@ fun CardListData(
     }
 }
 
-@Composable
-fun SideBySideText(
-    modifier: Modifier = Modifier,
-    textLabel: @Composable () -> Unit,
-    textContent: @Composable () -> Unit,
-) {
-    Row(
-        modifier = modifier
-    ) {
-        textLabel()
-        Text(
-            modifier = Modifier.padding(start = 6.dp, end = 10.dp),
-            text = ":"
-        )
-        textContent()
-    }
-}
-
-
-
 @Preview
 @Composable
 fun CardListDataPreview() {

@@ -2,6 +2,7 @@ package me.skripsi.domain.ui_models
 
 import me.skripsi.data.models.DataTraining
 import me.skripsi.data.models.DataTransaksi
+import me.skripsi.data.models.DataUji
 
 fun DataTransaksi.toUiDataTransaksi() : UiDataTransaksi{
     this.apply {
@@ -28,6 +29,30 @@ fun DataTraining.toUiDataTraining(): UiDataTraining {
             isDiskon = isDiskon,
             penjualan = penjualan,
             pembelian = pembelian
+        )
+    }
+}
+
+fun DataTransaksi.toUiProductSelected(): UiProductSelected{
+    this.apply {
+        return UiProductSelected(
+            kodeBarang = kodeBarang,
+            namaBarang = namaBarang,
+            kategori = golongan
+        )
+    }
+}
+
+fun DataUji.toUiDataUji(): UiDataUji{
+    this.apply {
+        return UiDataUji(
+            id= id,
+            kodeBarang = kodeBarang,
+            namaBarang = namaBarang,
+            golongan = golongan,
+            stok = stok,
+            isDiskon = isDiskon,
+            penjualan = penjualan
         )
     }
 }
