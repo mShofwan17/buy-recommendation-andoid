@@ -1,5 +1,6 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,20 +9,35 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.domain.ui_models.UiProductSelected
+import me.skripsi.domain.usecases.form_uji.GetAllDataUjiUseCase
 import me.skripsi.domain.usecases.form_uji.GetProductSelectedUseCase
+import me.skripsi.domain.usecases.form_uji.SaveDataUjiUseCase
+import me.skripsi.domain.usecases.form_uji.UpdateDataUjiUseCase
 import me.skripsi.rekomendasibeliapp.ui.UiState
+import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedEnum
 import javax.inject.Inject
 
 @HiltViewModel
 class FormUjiViewModel @Inject constructor(
-    private val getProductSelectedUseCase: GetProductSelectedUseCase
+    private val getProductSelectedUseCase: GetProductSelectedUseCase,
+    private val saveDataUjiUseCase: SaveDataUjiUseCase,
+    private val updateDataUjiUseCase: UpdateDataUjiUseCase,
+    private val getAllDataUjiUseCase: GetAllDataUjiUseCase
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<List<UiProductSelected>>>(UiState())
     val productState get() = _productState.asStateFlow()
 
     private val _selectedProducts = MutableStateFlow<List<UiProductSelected>>(listOf())
     val selectedProducts get() = _selectedProducts.asStateFlow()
+
+    private val _updateDataUjiStatus = MutableStateFlow(false)
+    val updateDataUjiStatus get() = _updateDataUjiStatus.asStateFlow()
+
+
+    private val _dataUjis = MutableStateFlow<List<UiDataUji>>(listOf())
+    val dataUjis get() = _dataUjis.asStateFlow()
 
     init {
         getProductSelected()
@@ -41,10 +57,45 @@ class FormUjiViewModel @Inject constructor(
         }
     }
 
+    fun saveSelectedData(items:List<UiProductSelected>){
+        viewModelScope.launch {
+            val dataUji = items.map { it.toDataUji() }
+            saveDataUjiUseCase(dataUji)
+        }
+    }
+
+    fun updateDataUji(items:List<UiDataUji>){
+        viewModelScope.launch {
+            updateDataUjiUseCase(items).collectLatest {
+                _updateDataUjiStatus.value = it
+            }
+        }
+    }
+
+    fun getAllDataUji(){
+        viewModelScope.launch {
+            getAllDataUjiUseCase().collectLatest {
+                _dataUjis.value = it
+            }
+        }
+    }
+
     fun updateSelectedProduct(kodeBarang: String?, isSelected: Boolean) {
         _selectedProducts.value = _selectedProducts.value.map {
             if (it.kodeBarang == kodeBarang) it.copy(isSelected = isSelected)
             else it
+        }
+    }
+
+    fun updateChangeOnDataUji(item: UiDataUji, stateChange: DataUjiChangedEnum){
+        _dataUjis.value = _dataUjis.value.map {
+            if (it.kodeBarang == item.kodeBarang){
+                when(stateChange){
+                    DataUjiChangedEnum.STOK -> it.copy(stok = item.stok)
+                    DataUjiChangedEnum.DISKON -> it.copy(isDiskon = item.isDiskon)
+                    DataUjiChangedEnum.PENJUALAN -> it.copy(penjualan = item.penjualan)
+                }
+            }else it
         }
     }
 

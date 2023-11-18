@@ -1,6 +1,5 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +54,9 @@ fun ProductSelectedScreen(
                     backgroundColor = Color.Blue
                 ) {
                     val itemsSelected = selectedProduct.filter { it.isSelected }
-                    navHostController.navigate(Screens.FormUji.route)
+                    viewModel.saveSelectedData(itemsSelected).also {
+                        navHostController.navigate(Screens.FormUji.route)
+                    }
                 }
             },
             onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }

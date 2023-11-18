@@ -5,9 +5,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import me.skripsi.data.data_source.BerandaDataSource
-import me.skripsi.data.data_source.ListDataUjiDataSource
+import me.skripsi.data.data_source.FormUjiDataSource
+import me.skripsi.data.data_source.ListDataDataSource
 import me.skripsi.data.repository.beranda.BerandaRepository
 import me.skripsi.data.repository.beranda.BerandaRepositoryImpl
+import me.skripsi.data.repository.form_uji.FormUjiRepository
+import me.skripsi.data.repository.form_uji.FormUjiRepositoryImpl
 import me.skripsi.data.repository.list_data.ListDataUjiRepository
 import me.skripsi.data.repository.list_data.ListDataUjiRepositoryImpl
 import javax.inject.Singleton
@@ -19,7 +22,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideListDataRepository(
-       dataSource: ListDataUjiDataSource
+       dataSource: ListDataDataSource
     ) : ListDataUjiRepository {
         return ListDataUjiRepositoryImpl(dataSource)
     }
@@ -29,4 +32,10 @@ object RepositoryModule {
     fun provideBerandaRepository(
         dataSource: BerandaDataSource
     ): BerandaRepository = BerandaRepositoryImpl(dataSource)
+
+    @Provides
+    @Singleton
+    fun provideFormUjiRepository(
+        dataSource: FormUjiDataSource
+    ): FormUjiRepository = FormUjiRepositoryImpl(dataSource)
 }

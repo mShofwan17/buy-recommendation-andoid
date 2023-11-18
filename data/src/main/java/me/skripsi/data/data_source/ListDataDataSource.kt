@@ -6,7 +6,7 @@ import me.skripsi.roomdb.entity.DataTrainingEntity
 import me.skripsi.roomdb.entity.DataTransaksiEntity
 import javax.inject.Inject
 
-class ListDataUjiDataSource @Inject constructor(
+class ListDataDataSource @Inject constructor(
     private val dbSource: BuyRecommendationDatabase
 ) : BaseDateSource() {
     suspend fun getDataTransaksi(): List<DataTransaksiEntity> = runBlocking {
