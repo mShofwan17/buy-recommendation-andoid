@@ -25,15 +25,14 @@ data class DataUji(
         )
     }
 
-    fun toDataUjiCalculate(items: List<DataTraining>): DataUjiCalculate {
+    fun toDataUjiCalculate(): DataUjiCalculate {
         return DataUjiCalculate(
             kodeBarang = kodeBarang ?: "",
             namaBarang = namaBarang ?: "",
             kategori = golongan ?: "",
             stok = stok.labeledStok(),
             isDiskon = isDiskon,
-            penjualan = penjualan.toInt().labeledPenjualan(),
-            items = items
+            penjualan = penjualan.labeledPenjualan()
         )
     }
 }

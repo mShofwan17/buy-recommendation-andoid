@@ -17,19 +17,24 @@ class ResultNaiveBayesDataSource @Inject constructor(
             val results = mutableListOf<ResultNaiveBayes>()
             val getDataTraining = async { dbSource.dataTrainingDao().getAllDataTraining().map { it.toDataTraining() } }.await()
             val getDataUji = async {
-                dbSource.dataUji().getAll().map { it.toDataUji() }.map { it.toDataUjiCalculate(getDataTraining) }
+                dbSource.dataUji().getAll().map { it.toDataUji() }.map { it.toDataUjiCalculate() }
             }.await()
 
             async {
                 getDataUji.forEach {
-                    val naiveBayes = NaiveBayesCalculate(it)
-                    val result = ResultNaiveBayes(
-                        kodeBarang = it.kodeBarang,
-                        positiveResult = naiveBayes.calculatePositive(),
-                        negativeResult = naiveBayes.calculateNegative(),
-                        result = naiveBayes.resultNaiveBayes()
-                    )
-                    results.add(result)
+                    NaiveBayesCalculate.apply {
+                        val positive =  calculatePositive(dataUji = it, items = getDataTraining)
+                        val negative = calculateNegative(dataUji = it, items = getDataTraining)
+
+                        val result = ResultNaiveBayes(
+                            kodeBarang = it.kodeBarang,
+                            positiveResult = positive,
+                            negativeResult = negative,
+                            result = resultNaiveBayes(positive, negative)
+                        )
+                        results.add(result)
+                    }
+
                 }
             }.await()
 

@@ -12,28 +12,27 @@ data class DataUjiCalculate(
     val kategori: String,
     val stok: String,
     val isDiskon: Boolean = false,
-    val penjualan: String,
-    val items: List<DataTraining> = listOf()
+    val penjualan: String
 ){
-    fun getKategori(): Double {
+    fun getKategori(items: List<DataTraining>): Double {
         return items.kategori(
             kategori = this.kategori
         ).size.toDouble().decimalFormat()
     }
 
-    fun getStok(): Double {
+    fun getStok(items: List<DataTraining>): Double {
         return items.stok(
             stok = this.stok
         ).size.toDouble().decimalFormat()
     }
 
-    fun getDiskon(): Double {
+    fun getDiskon(items: List<DataTraining>): Double {
         return items.diskon(
             isDiskon = this.isDiskon
         ).size.toDouble().decimalFormat()
     }
 
-    fun getPenjualan(): Double {
+    fun getPenjualan(items: List<DataTraining>): Double {
         return items.penjualan(
             penjualan = this.penjualan
         ).size.toDouble().decimalFormat()
