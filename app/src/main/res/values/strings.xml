@@ -12,4 +12,6 @@
     <string name="diskon">Diskon</string>
     <string name="penjualan">Penjualan</string>
     <string name="kembali_ke_beranda">Kembali ke Beranda</string>
+    <string name="lanjut">Lanjut</string>
+    <string name="import_from_csv">Import From CSV</string>
 </resources>

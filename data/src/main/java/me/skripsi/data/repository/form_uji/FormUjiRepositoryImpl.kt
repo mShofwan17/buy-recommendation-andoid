@@ -19,4 +19,8 @@ class FormUjiRepositoryImpl @Inject constructor(
         return dataSource.getAllDataUji()
     }
 
+    override suspend fun insertDataUjiFromCsv(filePath: String): List<DataUji> {
+        return dataSource.insertDataUjiFromCsv(filePath)
+    }
+
 }

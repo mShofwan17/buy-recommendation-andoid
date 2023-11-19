@@ -53,4 +53,6 @@ dependencies {
     annotationProcessor("android.arch.persistence.room:compiler:1.1.1")
     //gson
     implementation("com.google.code.gson:gson:2.10.1")
+    //open csv
+    implementation("com.opencsv:opencsv:5.7.1")
 }

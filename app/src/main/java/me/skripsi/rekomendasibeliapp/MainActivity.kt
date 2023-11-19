@@ -1,8 +1,10 @@
 package me.skripsi.rekomendasibeliapp
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,8 +19,20 @@ import me.skripsi.rekomendasibeliapp.ui.theme.RekomendasiBeliAppTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // PERMISSION GRANTED
+        } else {
+            // PERMISSION NOT GRANTED
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkAndRequestPermissions()
         setContent {
             RekomendasiBeliAppTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
@@ -32,6 +46,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    private fun checkAndRequestPermissions() {
+        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+
 }
 
 @Composable
