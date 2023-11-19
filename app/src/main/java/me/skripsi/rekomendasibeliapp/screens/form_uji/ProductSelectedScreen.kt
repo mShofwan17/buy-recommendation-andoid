@@ -13,12 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,14 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.domain.ui_models.UiProductSelected
 import me.skripsi.rekomendasibeliapp.R
 import me.skripsi.rekomendasibeliapp.components.CardProductSelected
+import me.skripsi.rekomendasibeliapp.components.LoadingContent
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
 import me.skripsi.rekomendasibeliapp.ui.UiState
@@ -46,10 +41,11 @@ fun ProductSelectedScreen(
     navHostController: NavHostController,
     viewModel: FormUjiViewModel = hiltViewModel()
 ) {
-    val productState = viewModel.productState.collectAsState()
+    val productState by viewModel.productState.collectAsState()
     val selectedProduct by viewModel.selectedProducts.collectAsState()
     val importDataUjiResults by viewModel.insertDataUjiFromCsv.collectAsState()
-    val scope = rememberCoroutineScope()
+    val saveDataUjiState by viewModel.saveToDatabaseState.collectAsState()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -57,36 +53,50 @@ fun ProductSelectedScreen(
             .padding(16.dp)
     ) {
 
-        StateButtonImportFromCsv(
-            state = importDataUjiResults,
-            scope = scope,
-            viewModel = viewModel,
-            navHostController = navHostController
+
+        saveDataUjiState.showUIComposable(
+            onInit = {
+                StateButtonImportFromCsv(
+                    state = importDataUjiResults,
+                    viewModel = viewModel
+                )
+
+                StateListSelectedProduct(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    productState = productState,
+                    selectedProduct = selectedProduct,
+                    viewModel = viewModel
+                )
+
+                MyButton(
+                    title = stringResource(R.string.lanjut),
+                    backgroundColor = Color.Blue
+                ) {
+                    val itemsSelected = selectedProduct.filter { it.isSelected }
+                    val dataUji = itemsSelected.map { it.toDataUji() }
+
+                    saveDataUji(
+                        viewModel,
+                        dataUji
+                    )
+                }
+            },
+            onLoading = {
+                LoadingContent(labelLoading = stringResource(R.string.loading_import_data_uji))
+            },
+            onSuccess = {
+                if (it){
+                    navHostController.navigate(Screens.FormUji.route){
+                        viewModel.resetStateInsertCsv()
+                    }
+
+                }
+            },
+            onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
         )
 
-        StateListSelectedProduct(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            productState = productState,
-            selectedProduct = selectedProduct,
-            viewModel = viewModel
-        )
-
-        MyButton(
-            title = stringResource(R.string.lanjut),
-            backgroundColor = Color.Blue
-        ) {
-            val itemsSelected = selectedProduct.filter { it.isSelected }
-            val dataUji = itemsSelected.map { it.toDataUji() }
-
-            saveAndNavigateToForm(
-                scope,
-                viewModel,
-                dataUji,
-                navHostController
-            )
-        }
     }
 }
 
@@ -94,9 +104,7 @@ fun ProductSelectedScreen(
 fun StateButtonImportFromCsv(
     modifier: Modifier = Modifier,
     state: UiState<List<UiDataUji>>,
-    scope: CoroutineScope,
-    viewModel: FormUjiViewModel,
-    navHostController: NavHostController
+    viewModel: FormUjiViewModel
 ) {
     val context = LocalContext.current
     val isLoading by remember {
@@ -108,7 +116,7 @@ fun StateButtonImportFromCsv(
             uri?.let {
                 val filePath = uri.toRealPath(context = context)
                 filePath?.let {
-                    Toast.makeText(context, uri.toRealPath(context), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, uri.toRealPath(context), Toast.LENGTH_LONG).show()
                     viewModel.insertDataUjiFromCsv(filePath)
                 }
             }
@@ -138,12 +146,9 @@ fun StateButtonImportFromCsv(
 
     state.showUIComposable(
         onSuccess = { dataUji ->
-            viewModel.resetStateInsertCsv()
-            saveAndNavigateToForm(
-                scope,
+            saveDataUji(
                 viewModel,
-                dataUji,
-                navHostController
+                dataUji
             )
         },
         onError = {
@@ -155,22 +160,19 @@ fun StateButtonImportFromCsv(
 @Composable
 fun StateListSelectedProduct(
     modifier: Modifier = Modifier,
-    productState: State<UiState<List<UiProductSelected>>>,
+    productState: UiState<List<UiProductSelected>>,
     selectedProduct: List<UiProductSelected>,
     viewModel: FormUjiViewModel
 ) {
     val context = LocalContext.current
 
-    productState.value.showUIComposable(
+    productState.showUIComposable(
         onSuccess = {
-
             ListProductSelected(
                 modifier = modifier,
                 items = selectedProduct,
                 viewModel = viewModel
             )
-
-
         },
         onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
     )
@@ -200,17 +202,9 @@ fun ListProductSelected(
     }
 }
 
-private fun saveAndNavigateToForm(
-    scope: CoroutineScope,
+private fun saveDataUji(
     viewModel: FormUjiViewModel,
-    items: List<UiDataUji>,
-    navHostController: NavHostController
+    items: List<UiDataUji>
 ) {
-    scope.launch {
-        async {
-            viewModel.saveSelectedData(items)
-        }.await()
-        navHostController.navigate(Screens.FormUji.route)
-        cancel()
-    }
+    viewModel.saveSelectedData(items)
 }

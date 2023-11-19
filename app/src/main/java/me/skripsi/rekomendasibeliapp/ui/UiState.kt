@@ -23,11 +23,13 @@ data class UiState<T>(
 
     @Composable
     fun showUIComposable(
+        onInit: @Composable () -> Unit = {},
         onLoading: @Composable () -> Unit = {},
         onSuccess:@Composable (data: T) -> Unit,
         onError:@Composable (message: String) -> Unit
     ){
         if (!isLoading){
+            onInit.invoke()
             data?.let { onSuccess.invoke(it) }
             message?.let{onError.invoke(it)}
         }else{

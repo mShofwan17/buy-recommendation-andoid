@@ -65,7 +65,8 @@ fun BerandaScreen(
             },
             onSuccess = {
                 BerandaContent(
-                    modifier = Modifier.padding(paddingValues),
+                    modifier = Modifier.padding(paddingValues)
+                        .background(Color.White),
                     navHostController = navHostController
                 )
             },

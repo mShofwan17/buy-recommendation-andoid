@@ -18,12 +18,12 @@ fun Boolean.viewDiskonLabel(): String {
 
 fun Uri.toRealPath(context: Context): String? {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // For Android Q (API 29) and above
-        return getRealPathFromDocumentUri(context, this)
+        getRealPathFromDocumentUri(context, this)
     } else {
         // For Android versions below Q
-        return getRealPathFromUriBelowQ(context, this)
+        getRealPathFromUriBelowQ(context, this)
     }
 }
 

@@ -7,18 +7,21 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import me.skripsi.data.repository.form_uji.FormUjiRepository
 import me.skripsi.domain.ui_models.UiDataUji
+import me.skripsi.domain.utils.ResponseState
 import javax.inject.Inject
 
 class SaveDataUjiUseCase @Inject constructor(
     private val repository: FormUjiRepository
 ) {
-    operator fun invoke(items: List<UiDataUji>) : Flow<Boolean> {
+    operator fun invoke(items: List<UiDataUji>) : Flow<ResponseState<Boolean>> {
         return flow {
+            emit(ResponseState.Loading())
             try {
                 val result = repository.saveDataUji(items.map { it.toDataUji() })
-                emit(result)
+                emit(ResponseState.Success(result))
             }catch (e:Exception){
                 Log.i("TAG_dataUji", "invoke: ${e.message}")
+                emit(ResponseState.Error(e.message))
             }
 
         }.flowOn(Dispatchers.IO)

@@ -17,6 +17,6 @@ rootProject.name = "Rekomendasi Beli App"
 include(":app")
 include(":roomDb")
 //include(":naiveBayes")
-include(":core")
+//include(":core")
 include(":data")
 include(":domain")

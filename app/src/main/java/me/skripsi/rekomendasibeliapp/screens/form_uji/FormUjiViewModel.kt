@@ -41,6 +41,9 @@ class FormUjiViewModel @Inject constructor(
     private val _insertDataUjiFromCsv = MutableStateFlow<UiState<List<UiDataUji>>>(UiState())
     val insertDataUjiFromCsv get() = _insertDataUjiFromCsv.asStateFlow()
 
+    private val _saveToDatabaseState = MutableStateFlow<UiState<Boolean>>(UiState())
+    val saveToDatabaseState get() = _saveToDatabaseState.asStateFlow()
+
     init {
         getProductSelected()
         getAllDataUji()
@@ -61,7 +64,15 @@ class FormUjiViewModel @Inject constructor(
 
     fun saveSelectedData(items: List<UiDataUji>) {
         viewModelScope.launch {
-            saveDataUjiUseCase(items).collectLatest {}
+            saveDataUjiUseCase(items).collectLatest {
+                _saveToDatabaseState.update { state ->
+                    when(it){
+                        is ResponseState.Loading -> state.loading()
+                        is ResponseState.Success -> state.success(true)
+                        is ResponseState.Error -> state.error(message = it.message)
+                    }
+                }
+            }
         }
     }
 
@@ -114,6 +125,10 @@ class FormUjiViewModel @Inject constructor(
     }
 
     fun resetStateInsertCsv(){
+
+        _saveToDatabaseState.update {
+            it.success(false)
+        }
         _insertDataUjiFromCsv.value = UiState()
     }
 
