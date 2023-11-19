@@ -249,7 +249,7 @@ fun ResultBuyRecommendationView(
     ){
         Text(
             modifier = Modifier
-                .padding(all = 4.dp),
+                .padding(all = 8.dp),
             text = item.recommendation,
             color = Color.White,
             fontWeight = FontWeight.Bold,

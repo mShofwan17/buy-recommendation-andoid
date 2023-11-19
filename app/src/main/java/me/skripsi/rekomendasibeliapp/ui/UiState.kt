@@ -3,7 +3,7 @@ package me.skripsi.rekomendasibeliapp.ui
 import androidx.compose.runtime.Composable
 
 data class UiState<T>(
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val data: T? = null,
     val message: String? = null
 ){

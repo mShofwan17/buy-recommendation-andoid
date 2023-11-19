@@ -13,8 +13,10 @@ import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.domain.ui_models.UiProductSelected
 import me.skripsi.domain.usecases.form_uji.GetAllDataUjiUseCase
 import me.skripsi.domain.usecases.form_uji.GetProductSelectedUseCase
+import me.skripsi.domain.usecases.form_uji.InsertDataUjiFromCsvUseCase
 import me.skripsi.domain.usecases.form_uji.SaveDataUjiUseCase
 import me.skripsi.domain.usecases.form_uji.UpdateDataUjiUseCase
+import me.skripsi.domain.utils.ResponseState
 import me.skripsi.rekomendasibeliapp.ui.UiState
 import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedState
 import javax.inject.Inject
@@ -24,7 +26,8 @@ class FormUjiViewModel @Inject constructor(
     private val getProductSelectedUseCase: GetProductSelectedUseCase,
     private val saveDataUjiUseCase: SaveDataUjiUseCase,
     private val updateDataUjiUseCase: UpdateDataUjiUseCase,
-    private val getAllDataUjiUseCase: GetAllDataUjiUseCase
+    private val getAllDataUjiUseCase: GetAllDataUjiUseCase,
+    private val insertDataUjiFromCsvUseCase: InsertDataUjiFromCsvUseCase
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<List<UiProductSelected>>>(UiState())
     val productState get() = _productState.asStateFlow()
@@ -34,6 +37,9 @@ class FormUjiViewModel @Inject constructor(
 
     private val _dataUjis = MutableStateFlow<List<UiDataUji>>(listOf())
     val dataUjis: StateFlow<List<UiDataUji>> = _dataUjis
+
+    private val _insertDataUjiFromCsv = MutableStateFlow<UiState<List<UiDataUji>>>(UiState())
+    val insertDataUjiFromCsv get() = _insertDataUjiFromCsv.asStateFlow()
 
     init {
         getProductSelected()
@@ -53,10 +59,9 @@ class FormUjiViewModel @Inject constructor(
         }
     }
 
-    fun saveSelectedData(items: List<UiProductSelected>) {
+    fun saveSelectedData(items: List<UiDataUji>) {
         viewModelScope.launch {
-            val dataUji = items.map { it.toDataUji() }
-            saveDataUjiUseCase(dataUji).collectLatest {}
+            saveDataUjiUseCase(items).collectLatest {}
         }
     }
 
@@ -70,6 +75,21 @@ class FormUjiViewModel @Inject constructor(
         viewModelScope.launch {
             getAllDataUjiUseCase().collectLatest {
                 _dataUjis.value = it
+            }
+        }
+    }
+
+    fun insertDataUjiFromCsv(filePath: String) {
+        viewModelScope.launch {
+            insertDataUjiFromCsvUseCase(filePath).collectLatest {
+                _insertDataUjiFromCsv.update { state ->
+                    when (it) {
+                        is ResponseState.Loading -> state.loading()
+                        is ResponseState.Success -> state.success(it.data)
+                        is ResponseState.Error -> state.error(it.message)
+                        else -> UiState()
+                    }
+                }
             }
         }
     }
@@ -91,6 +111,10 @@ class FormUjiViewModel @Inject constructor(
                 }
             } else it
         }
+    }
+
+    fun resetStateInsertCsv(){
+        _insertDataUjiFromCsv.value = UiState()
     }
 
 }

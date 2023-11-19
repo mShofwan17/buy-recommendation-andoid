@@ -84,4 +84,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     //hilt compose
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    //document file
+    implementation("androidx.documentfile:documentfile:1.0.1")
 }

@@ -6,4 +6,5 @@ interface FormUjiRepository {
     suspend fun saveDataUji(items: List<DataUji>) : Boolean
     suspend fun updateDataUji(items: List<DataUji>): Boolean
     suspend fun getAllDataUji(): List<DataUji>
+    suspend fun insertDataUjiFromCsv(filePath: String): List<DataUji>
 }

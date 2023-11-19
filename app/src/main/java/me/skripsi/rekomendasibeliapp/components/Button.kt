@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ fun MyButton(
     icon: ImageVector? = null,
     title: String,
     backgroundColor: Color,
+    contentLoading: Boolean = false,
     onClick: () -> Unit
 ) {
     Box(
@@ -39,27 +41,29 @@ fun MyButton(
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-
-        Row{
-            icon?.let {
-                Icon(
-                    modifier = Modifier.padding(
-                        top = 2.dp,
-                        end = 10.dp
-                    ),
-                    imageVector = icon,
-                    contentDescription = stringResource(R.string.icon_button),
-                    tint = Color.White
+        if (contentLoading) {
+            CircularProgressIndicator(color = Color.White)
+        } else {
+            Row {
+                icon?.let {
+                    Icon(
+                        modifier = Modifier.padding(
+                            top = 2.dp,
+                            end = 10.dp
+                        ),
+                        imageVector = icon,
+                        contentDescription = stringResource(R.string.icon_button),
+                        tint = Color.White
+                    )
+                }
+                Text(
+                    modifier = Modifier,
+                    text = title,
+                    color = Color.White,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize
                 )
             }
-            Text(
-                modifier = Modifier,
-                text = title,
-                color = Color.White,
-                fontSize = MaterialTheme.typography.titleLarge.fontSize
-            )
         }
-
     }
 }
 
