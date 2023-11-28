@@ -66,7 +66,7 @@ class FormUjiViewModel @Inject constructor(
         viewModelScope.launch {
             saveDataUjiUseCase(items).collectLatest {
                 _saveToDatabaseState.update { state ->
-                    when(it){
+                    when (it) {
                         is ResponseState.Loading -> state.loading()
                         is ResponseState.Success -> state.success(true)
                         is ResponseState.Error -> state.error(message = it.message)
@@ -124,12 +124,17 @@ class FormUjiViewModel @Inject constructor(
         }
     }
 
-    fun resetStateInsertCsv(){
-
+    fun resetStateInsertCsv() {
+        _insertDataUjiFromCsv.update {
+            UiState()
+        }
         _saveToDatabaseState.update {
             it.success(false)
         }
-        _insertDataUjiFromCsv.value = UiState()
+    }
+
+    fun resetResultCsv() {
+        _insertDataUjiFromCsv.update { UiState() }
     }
 
 }
