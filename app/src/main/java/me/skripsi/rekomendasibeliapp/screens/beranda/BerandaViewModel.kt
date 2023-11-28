@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.skripsi.domain.usecases.beranda.CheckIsDataExistUseCase
 import me.skripsi.domain.usecases.beranda.InsertDataUseCase
+import me.skripsi.domain.usecases.list_data.GetListDataTrainingUseCase
+import me.skripsi.domain.utils.ResponseState
 import me.skripsi.rekomendasibeliapp.ui.UiState
 import javax.inject.Inject
 
@@ -22,6 +24,9 @@ class BerandaViewModel @Inject constructor(
     private val _insertDataState = MutableStateFlow<UiState<String>>(UiState())
     val insertDataState get() = _insertDataState.asStateFlow()
 
+    private val _isDataExist = MutableStateFlow<Boolean?>(null)
+    val isDataExist get() = _isDataExist
+
     init {
         checkIsDataExist()
     }
@@ -29,20 +34,36 @@ class BerandaViewModel @Inject constructor(
     private fun checkIsDataExist() {
         viewModelScope.launch {
             checkIsDataExistUseCase().collectLatest {
-                if (!it) insertDataTraining()
-                else _insertDataState.update { state ->
-                    state.success("Sudah ada data")
+                if (it) {
+                    _insertDataState.update { state ->
+                        state.success("Sudah ada data")
+                    }
                 }
+
+                isDataExist.value = it
             }
         }
     }
 
-    private fun insertDataTraining() {
+    fun insertDataTraining(filePath: String? = null) {
         viewModelScope.launch {
-            insertDataUseCase().collectLatest { result ->
+            _isDataExist.update { true }
+            _insertDataState.update { uiState -> uiState.loading() }
+            insertDataUseCase(filePath).collectLatest { result ->
                 _insertDataState.update { uiState ->
-                    if (result) uiState.success("Data berhasil tersimpan")
-                    else uiState.error("Gagal")
+                    when(result){
+                        is ResponseState.Loading -> {
+                            uiState.loading()
+                        }
+                        is ResponseState.Success -> {
+                            uiState.success("Data berhasil tersimpan")
+                        }
+                        is ResponseState.Error -> {
+                            uiState.error(result.message)
+                        }
+
+                        else -> UiState()
+                    }
                 }
             }
         }

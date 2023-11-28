@@ -14,7 +14,7 @@ fun DataTransaksi.toUiDataTransaksi() : UiDataTransaksi{
             namaBarang = namaBarang,
             golongan = golongan,
             stok = stok,
-            isDiskon = isDiskon,
+            isDiskon = isDiskon.toShort(),
             penjualan = penjualan,
             pembelian = pembelian
         )

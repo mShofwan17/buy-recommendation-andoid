@@ -1,10 +1,13 @@
 package me.skripsi.rekomendasibeliapp.screens.beranda
 
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +44,8 @@ import me.skripsi.rekomendasibeliapp.components.CardHome
 import me.skripsi.rekomendasibeliapp.components.LoadingContent
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
+import me.skripsi.rekomendasibeliapp.ui.UiState
+import me.skripsi.rekomendasibeliapp.utils.toRealPath
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +58,7 @@ fun BerandaScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Rekomendasi Beli",
+                        text = stringResource(R.string.rekomendasi_beli),
                         color = Color.White
                     )
                 },
@@ -55,27 +67,108 @@ fun BerandaScreen(
         },
     ) { paddingValues ->
         val context = LocalContext.current
+        val isDataExist = berandaViewModel.isDataExist.collectAsState()
         val insertState = berandaViewModel.insertDataState.collectAsState()
-        insertState.value.showUIComposable(
-            onLoading = {
-                LoadingContent(
-                    modifier = Modifier.padding(paddingValues),
-                    labelLoading = "Download Data..."
-                )
-            },
-            onSuccess = {
-                BerandaContent(
-                    modifier = Modifier.padding(paddingValues)
-                        .background(Color.White),
-                    navHostController = navHostController
-                )
-            },
-            onError = {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        var actionFromImport by remember {
+            mutableStateOf(false)
+        }
+        val resultFile = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+            onResult = { uri ->
+                uri?.let {
+                    val filePath = uri.toRealPath(context = context)
+                    filePath?.let {
+                        actionFromImport = true
+                        //Toast.makeText(context, uri.toRealPath(context), Toast.LENGTH_LONG).show()
+                        berandaViewModel.insertDataTraining(filePath)
+                    }
+                }
+
             }
         )
 
+        isDataExist.value?.let {
+            if (!it) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = 16.dp,
+                            bottom = 16.dp,
+                            end = 24.dp,
+                            start = 24.dp
+                        ),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    MyButton(
+                        title = stringResource(R.string.import_from_csv),
+                        icon = Icons.Default.List,
+                        backgroundColor = Color.Green
+                    ) {
+                        resultFile.launch("text/csv/*")
+                    }
+
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 10.dp,
+                            bottom = 10.dp
+                        ),
+                        text = stringResource(R.string.or)
+                    )
+
+                    MyButton(
+                        title = stringResource(R.string.download_data),
+                        icon = Icons.Default.ArrowDropDown,
+                        backgroundColor = Color.Blue
+                    ) {
+                        actionFromImport = false
+                        berandaViewModel.insertDataTraining(null)
+                    }
+                }
+            } else {
+                StateBerandaContent(
+                    navHostController = navHostController,
+                    paddingValues = paddingValues,
+                    state = insertState.value,
+                    actionFromImport =  actionFromImport
+                )
+            }
+        }
+
     }
+}
+
+@Composable
+fun StateBerandaContent(
+    navHostController: NavHostController,
+    paddingValues: PaddingValues,
+    state: UiState<String>,
+    actionFromImport: Boolean
+) {
+    val context = LocalContext.current
+
+    state.showUIComposable(
+        onLoading = {
+            LoadingContent(
+                modifier = Modifier.padding(paddingValues),
+                labelLoading = if (!actionFromImport) "Download Data..."
+                else "Import Data..."
+            )
+        },
+        onSuccess = {
+            BerandaContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color.White),
+                navHostController = navHostController
+            )
+        },
+        onError = {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    )
 }
 
 @Composable

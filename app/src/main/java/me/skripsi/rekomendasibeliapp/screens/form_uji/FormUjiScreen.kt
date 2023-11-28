@@ -40,6 +40,11 @@ fun FormUjiScreen(
 ) {
     val dataUjis by viewModel.dataUjis.collectAsState()
     val scope = rememberCoroutineScope()
+    //val context = LocalContext.current
+
+    /*BackHandler(true) {
+        Toast.makeText(context, "Tidak bisa kembali", Toast.LENGTH_SHORT).show()
+    }*/
 
     Column(
         modifier = Modifier

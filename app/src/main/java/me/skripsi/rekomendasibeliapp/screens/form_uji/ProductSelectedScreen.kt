@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,6 +49,22 @@ fun ProductSelectedScreen(
     val importDataUjiResults by viewModel.insertDataUjiFromCsv.collectAsState()
     val saveDataUjiState by viewModel.saveToDatabaseState.collectAsState()
     val context = LocalContext.current
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (openDialog){
+        AlertDialog(
+            title = { Text(text = "Perhatian") },
+            text = { Text(text = "Data Uji tidak boleh kosong, silahkan pilih barang atau import CSV Data Uji!")},
+            onDismissRequest = { openDialog = false },
+            confirmButton = {
+                TextButton(onClick = { openDialog = false }) {
+                    Text(text = "OK")
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -77,22 +96,27 @@ fun ProductSelectedScreen(
                     val itemsSelected = selectedProduct.filter { it.isSelected }
                     val dataUji = itemsSelected.map { it.toDataUji() }
 
-                    saveDataUji(
-                        viewModel,
-                        dataUji
-                    )
+                    if (itemsSelected.isNotEmpty()) {
+                        saveDataUji(
+                            viewModel,
+                            dataUji
+                        )
+                    } else {
+                        openDialog = true
+                    }
                 }
             },
             onLoading = {
                 LoadingContent(labelLoading = stringResource(R.string.loading_import_data_uji))
             },
             onSuccess = {
-                if (it){
-                    navHostController.navigate(Screens.FormUji.route){
-                        viewModel.resetStateInsertCsv()
+                if (it) {
+                    viewModel.resetStateInsertCsv().also {
+                        navHostController.navigate(Screens.FormUji.route)
                     }
 
                 }
+
             },
             onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
         )
@@ -146,6 +170,7 @@ fun StateButtonImportFromCsv(
 
     state.showUIComposable(
         onSuccess = { dataUji ->
+            viewModel.resetResultCsv()
             saveDataUji(
                 viewModel,
                 dataUji

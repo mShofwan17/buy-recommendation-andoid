@@ -29,9 +29,9 @@ data class UiState<T>(
         onError:@Composable (message: String) -> Unit
     ){
         if (!isLoading){
-            onInit.invoke()
             data?.let { onSuccess.invoke(it) }
             message?.let{onError.invoke(it)}
+            onInit.invoke()
         }else{
             onLoading.invoke()
         }
