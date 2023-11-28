@@ -15,4 +15,6 @@
     <string name="lanjut">Lanjut</string>
     <string name="import_from_csv">Import From CSV</string>
     <string name="loading_import_data_uji">Import file data uji...</string>
+    <string name="download_data">Download Data</string>
+    <string name="or">or</string>
 </resources>

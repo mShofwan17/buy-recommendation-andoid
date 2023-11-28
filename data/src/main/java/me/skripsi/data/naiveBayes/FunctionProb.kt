@@ -16,9 +16,10 @@ fun Int.labeledStok(): String {
     }
 }
 
-fun Int.labeledDiskon(): Boolean{
+fun Int.labeledDiskon(): Boolean {
     return this == 1
 }
+
 fun Int.labeledPenjualan(): String {
     return when {
         this <= 50 -> "Sedikit"
@@ -26,20 +27,25 @@ fun Int.labeledPenjualan(): String {
         else -> "Banyak"
     }
 }
+
 fun Int.classPembelian(): Boolean {
     return this > 0
 }
 
-fun Double.decimalFormat() : Double{
+fun Double.decimalFormat(): Double {
     val df = DecimalFormat("#")
     df.maximumFractionDigits = 4
 
     return df.format(this).toDouble()
 }
 
-fun BigDecimal.decimalFormat() : BigDecimal {
+fun BigDecimal.decimalFormat(): BigDecimal {
     val df = DecimalFormat("#")
     df.maximumFractionDigits = 5
 
     return df.format(this).toBigDecimal()
+}
+
+fun Int?.safetyInt(): Int {
+    return this ?: 0
 }

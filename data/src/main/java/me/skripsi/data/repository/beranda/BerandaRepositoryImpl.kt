@@ -10,7 +10,7 @@ class BerandaRepositoryImpl @Inject constructor(
         return dataSource.checkDataExist()
     }
 
-    override suspend fun insertDataTraining(): Boolean {
-        return dataSource.insertDataTraining()
+    override suspend fun insertDataTraining(filePath: String?): Boolean {
+        return dataSource.insertDataTraining(filePath)
     }
 }

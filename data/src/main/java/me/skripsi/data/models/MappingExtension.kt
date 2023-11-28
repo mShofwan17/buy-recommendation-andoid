@@ -17,7 +17,7 @@ fun DataTransaksiEntity.toDataTransaksi() : DataTransaksi{
             namaBarang = namaBarang,
             golongan = golongan,
             stok = stok,
-            isDiskon = isDiskon,
+            isDiskon = isDiskon.toInt(),
             penjualan = penjualan,
             pembelian = pembelian
         )
