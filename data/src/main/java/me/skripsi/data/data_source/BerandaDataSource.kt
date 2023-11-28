@@ -1,6 +1,5 @@
 package me.skripsi.data.data_source
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.opencsv.CSVReaderBuilder
@@ -10,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.skripsi.data.jsonDataMentah
 import me.skripsi.data.models.DataTransaksi
-import me.skripsi.data.models.DataUji
 import me.skripsi.data.models.toDataTrainingEntity
 import me.skripsi.data.naiveBayes.safetyInt
 import me.skripsi.roomdb.BuyRecommendationDatabase
@@ -48,7 +46,7 @@ class BerandaDataSource @Inject constructor(
                             isDiskon = it[4].toIntOrNull().safetyInt(),
                             penjualan = it[5].toIntOrNull().safetyInt(),
                             pembelian = it[6].toIntOrNull().safetyInt()
-                        )
+                        ).toDataTransaksiEntity()
                     }
                 } ?: kotlin.run {
                     val type = object : TypeToken<List<DataTransaksiEntity>>() {}.type
@@ -56,9 +54,9 @@ class BerandaDataSource @Inject constructor(
                 }
             }
 
-            items.await().onEach { dbSource.dataTransaksiDao().addDataTransaksi(it.toDataTransaksiEntity()) }
+            items.await().onEach { dbSource.dataTransaksiDao().addDataTransaksi(it) }
                 .onEach { transaksi ->
-                    dbSource.dataTrainingDao().addDataTraining(transaksi.toDataTransaksiEntity().toDataTrainingEntity())
+                    dbSource.dataTrainingDao().addDataTraining(transaksi.toDataTrainingEntity())
                 }
             dbSource.dataTrainingDao().getAllDataTraining().isNotEmpty()
         }

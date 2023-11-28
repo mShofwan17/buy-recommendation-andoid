@@ -25,6 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,7 +58,7 @@ fun BerandaScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Rekomendasi Beli",
+                        text = stringResource(R.string.rekomendasi_beli),
                         color = Color.White
                     )
                 },
@@ -65,12 +69,16 @@ fun BerandaScreen(
         val context = LocalContext.current
         val isDataExist = berandaViewModel.isDataExist.collectAsState()
         val insertState = berandaViewModel.insertDataState.collectAsState()
+        var actionFromImport by remember {
+            mutableStateOf(false)
+        }
         val resultFile = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri ->
                 uri?.let {
                     val filePath = uri.toRealPath(context = context)
                     filePath?.let {
+                        actionFromImport = true
                         //Toast.makeText(context, uri.toRealPath(context), Toast.LENGTH_LONG).show()
                         berandaViewModel.insertDataTraining(filePath)
                     }
@@ -114,6 +122,7 @@ fun BerandaScreen(
                         icon = Icons.Default.ArrowDropDown,
                         backgroundColor = Color.Blue
                     ) {
+                        actionFromImport = false
                         berandaViewModel.insertDataTraining(null)
                     }
                 }
@@ -121,7 +130,8 @@ fun BerandaScreen(
                 StateBerandaContent(
                     navHostController = navHostController,
                     paddingValues = paddingValues,
-                    state = insertState.value
+                    state = insertState.value,
+                    actionFromImport =  actionFromImport
                 )
             }
         }
@@ -133,7 +143,8 @@ fun BerandaScreen(
 fun StateBerandaContent(
     navHostController: NavHostController,
     paddingValues: PaddingValues,
-    state: UiState<String>
+    state: UiState<String>,
+    actionFromImport: Boolean
 ) {
     val context = LocalContext.current
 
@@ -141,7 +152,8 @@ fun StateBerandaContent(
         onLoading = {
             LoadingContent(
                 modifier = Modifier.padding(paddingValues),
-                labelLoading = "Download Data..."
+                labelLoading = if (!actionFromImport) "Download Data..."
+                else "Import Data..."
             )
         },
         onSuccess = {
