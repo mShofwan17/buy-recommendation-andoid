@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.skripsi.data.models.DataUji
 import me.skripsi.data.models.toDataUji
+import me.skripsi.data.naiveBayes.labeledDiskon
 import me.skripsi.roomdb.BuyRecommendationDatabase
 import java.io.FileReader
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class FormUjiDataSource @Inject constructor(
                     namaBarang = it[1],
                     golongan = it[2],
                     stok = it[3].toInt(),
-                    isDiskon = it[4].toBoolean(),
+                    isDiskon = it[4].toInt().labeledDiskon(),
                     penjualan = it[5].toInt()
                 )
             }

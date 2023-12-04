@@ -18,7 +18,7 @@ object NaiveBayesCalculate {
             val penjualan = (dataUji.getPenjualan(allTrue()) / positive).decimalFormat()
             val positiveSize = (positive /size.toDouble()).decimalFormat()
 
-            val result = kategori * persediaan * promosi * penjualan * positiveSize
+            val result = /*kategori **/ persediaan * promosi * penjualan * positiveSize
 
             println("$kategori * $persediaan * $promosi * $penjualan * $positiveSize")
             println("Positive : $positive / $size")
@@ -46,7 +46,7 @@ object NaiveBayesCalculate {
             val penjualan = (dataUji.getPenjualan(allFalse()) / negative).decimalFormat()
             val negativeSize = (negative /size.toDouble()).decimalFormat()
 
-            val result = kategori * persediaan * promosi * penjualan * negativeSize
+            val result = /*kategori **/ persediaan * promosi * penjualan * negativeSize
             println("----------------------------------------------------------------")
             println("$kategori * $persediaan * $promosi * $penjualan * $negativeSize")
             println("Negative : $negative / $size")
