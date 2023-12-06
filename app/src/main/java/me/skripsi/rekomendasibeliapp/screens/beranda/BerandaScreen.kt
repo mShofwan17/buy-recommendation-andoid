@@ -28,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import me.skripsi.rekomendasibeliapp.R
 import me.skripsi.rekomendasibeliapp.components.CardHome
 import me.skripsi.rekomendasibeliapp.components.LoadingContent
@@ -108,7 +111,7 @@ fun BerandaScreen(
                     ) {
                         resultFile.launch("text/csv/*")
                     }
-
+/*
                     Text(
                         modifier = Modifier.padding(
                             top = 10.dp,
@@ -124,14 +127,15 @@ fun BerandaScreen(
                     ) {
                         actionFromImport = false
                         berandaViewModel.insertDataTraining(null)
-                    }
+                    }*/
                 }
             } else {
                 StateBerandaContent(
                     navHostController = navHostController,
                     paddingValues = paddingValues,
                     state = insertState.value,
-                    actionFromImport =  actionFromImport
+                    actionFromImport =  actionFromImport,
+                    viewModel = berandaViewModel
                 )
             }
         }
@@ -144,7 +148,8 @@ fun StateBerandaContent(
     navHostController: NavHostController,
     paddingValues: PaddingValues,
     state: UiState<String>,
-    actionFromImport: Boolean
+    actionFromImport: Boolean,
+    viewModel: BerandaViewModel
 ) {
     val context = LocalContext.current
 
@@ -162,7 +167,8 @@ fun StateBerandaContent(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .background(Color.White),
-                navHostController = navHostController
+                navHostController = navHostController,
+                viewModel
             )
         },
         onError = {
@@ -174,8 +180,10 @@ fun StateBerandaContent(
 @Composable
 fun BerandaContent(
     modifier: Modifier,
-    navHostController: NavHostController? = null
+    navHostController: NavHostController? = null,
+    viewModel: BerandaViewModel
 ) {
+    val scope = rememberCoroutineScope()
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -208,6 +216,14 @@ fun BerandaContent(
                     navHostController?.navigate(Screens.ListData.passBoolean(false))
                 }
             )
+            Spacer(modifier = Modifier.padding(10.dp))
+            CardHome(
+                title = stringResource(R.string.hasil_rekomendasi),
+                image = painterResource(id = R.drawable.hasil),
+                onClick = {
+                    navHostController?.navigate(Screens.HasilUji.route)
+                }
+            )
         }
 
         Box(
@@ -220,7 +236,10 @@ fun BerandaContent(
                 title = stringResource(R.string.uji_data),
                 backgroundColor = Color.Blue,
                 onClick = {
-                    navHostController?.navigate(Screens.ProductSelected.route)
+                    scope.launch {
+                        async { viewModel.deleteAll() }.await()
+                        navHostController?.navigate(Screens.ProductSelected.route)
+                    }
                 }
             )
         }

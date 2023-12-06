@@ -21,8 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HasilUjiViewModel @Inject constructor(
     private val getAllDataUjiUseCase: GetAllDataUjiUseCase,
-    private val getListHasilUjiUseCase: GetListHasilUjiUseCase,
-    private val deleteAllUseCase: DeleteAllUseCase
+    private val getListHasilUjiUseCase: GetListHasilUjiUseCase
 ) : ViewModel() {
     private val _buyRecommendation = MutableStateFlow<UiState<List<UiBuyRecommendation>>>(UiState())
     val buyRecommendation get() = _buyRecommendation.asStateFlow()
@@ -43,12 +42,6 @@ class HasilUjiViewModel @Inject constructor(
                     }
                 }
             }
-        }
-    }
-
-    fun deleteAll(){
-        viewModelScope.launch {
-            deleteAllUseCase().collectLatest {  }
         }
     }
 }

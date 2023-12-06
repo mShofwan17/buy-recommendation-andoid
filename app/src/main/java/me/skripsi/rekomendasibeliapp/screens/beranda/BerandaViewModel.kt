@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.skripsi.domain.usecases.beranda.CheckIsDataExistUseCase
 import me.skripsi.domain.usecases.beranda.InsertDataUseCase
+import me.skripsi.domain.usecases.hasil_uji.DeleteAllUseCase
 import me.skripsi.domain.usecases.list_data.GetListDataTrainingUseCase
 import me.skripsi.domain.utils.ResponseState
 import me.skripsi.rekomendasibeliapp.ui.UiState
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BerandaViewModel @Inject constructor(
     private val checkIsDataExistUseCase: CheckIsDataExistUseCase,
-    private val insertDataUseCase: InsertDataUseCase
+    private val insertDataUseCase: InsertDataUseCase,
+    private val deleteAllUseCase: DeleteAllUseCase
 ) : ViewModel() {
 
     private val _insertDataState = MutableStateFlow<UiState<String>>(UiState())
@@ -66,6 +68,12 @@ class BerandaViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun deleteAll(){
+        viewModelScope.launch {
+            deleteAllUseCase().collectLatest {  }
         }
     }
 }

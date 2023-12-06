@@ -68,7 +68,6 @@ fun HasilUjiScreen(
                     backgroundColor = Color.Blue
                 ) {
                     scope.launch {
-                       async {  viewModel.deleteAll() }.await()
                         navHostController.navigate(Screens.Beranda.route){
                             popUpTo(route = Screens.Beranda.route){
                                 inclusive = true
