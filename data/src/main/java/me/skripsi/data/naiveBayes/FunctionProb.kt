@@ -22,8 +22,8 @@ fun Int.labeledDiskon(): Boolean {
 
 fun Int.labeledPenjualan(): String {
     return when {
-        this <= 50 -> "Sedikit"
-        this in 51..100 -> "Standar"
+        this <= 30 -> "Sedikit"
+        this in 31..100 -> "Standar"
         else -> "Banyak"
     }
 }
