@@ -29,14 +29,24 @@ fun SetupNavGraph(navController: NavHostController) {
                 navController = navController
             )
         }
-        composable(route = Screens.ProductSelected.route){
+        composable(route = Screens.ProductSelected.route) {
             ProductSelectedScreen(navHostController = navController)
         }
-        composable(route = Screens.FormUji.route){
+        composable(route = Screens.FormUji.route) {
             FormUjiScreen(navHostController = navController)
         }
-        composable(route = Screens.HasilUji.route){
-            HasilUjiScreen(navHostController = navController)
+        composable(
+            route = Screens.HasilUji.route,
+            arguments = listOf(navArgument(name = "isFromHome") {
+                type = NavType.BoolType
+            })
+        ) {
+            it.arguments?.getBoolean("isFromHome")?.let { it1 ->
+                HasilUjiScreen(
+                    navHostController = navController,
+                    isFromHome = it1
+                )
+            }
         }
     }
 }

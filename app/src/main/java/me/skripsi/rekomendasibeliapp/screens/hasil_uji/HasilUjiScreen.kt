@@ -1,6 +1,7 @@
 package me.skripsi.rekomendasibeliapp.screens.hasil_uji
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -35,11 +36,18 @@ import me.skripsi.rekomendasibeliapp.navigation.Screens
 @Composable
 fun HasilUjiScreen(
     navHostController: NavHostController,
-    viewModel: HasilUjiViewModel = hiltViewModel()
+    viewModel: HasilUjiViewModel = hiltViewModel(),
+    isFromHome: Boolean = false
 ) {
     val buyRecommendation by viewModel.buyRecommendation.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    if (!isFromHome){
+        BackHandler(true) {
+            Toast.makeText(context, "Tidak bisa kembali", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     buyRecommendation.showUIComposable(
         onLoading = {
@@ -68,8 +76,8 @@ fun HasilUjiScreen(
                     backgroundColor = Color.Blue
                 ) {
                     scope.launch {
-                        navHostController.navigate(Screens.Beranda.route){
-                            popUpTo(route = Screens.Beranda.route){
+                        navHostController.navigate(Screens.Beranda.route) {
+                            popUpTo(route = Screens.Beranda.route) {
                                 inclusive = true
                             }
                         }

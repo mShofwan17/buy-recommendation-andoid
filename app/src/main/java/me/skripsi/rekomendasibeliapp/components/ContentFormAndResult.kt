@@ -1,5 +1,6 @@
 package me.skripsi.rekomendasibeliapp.components
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -187,14 +189,21 @@ fun FormDataUjiView(
             .fillMaxWidth(),
         textLabel = stringResource(R.string.penjualan),
         content = VerticalSmallLabelBigContentState.InputText {
+            val context = LocalContext.current
+
             MyInputText(
                 text = if (dataUji.penjualan == 0) ""
                 else dataUji.penjualan.toString(),
                 onTextChange = {
                     val convert = it.toIntOrNull()
                     convert?.let {
+                        val result = if (convert>dataUji.stok) {
+                            Toast.makeText(context, "Penjualan tidak bisa melebihi stok.", Toast.LENGTH_SHORT).show()
+                            0
+                        }
+                        else convert
                         onDataChange(
-                            DataUjiChangedState.Penjualan(convert)
+                            DataUjiChangedState.Penjualan(result)
                         )
                     }
                 }

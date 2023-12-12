@@ -61,9 +61,7 @@ fun BerandaScreen(
     navHostController: NavHostController,
     berandaViewModel: BerandaViewModel = hiltViewModel()
 ) {
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
+    var openDialog by remember { mutableStateOf(false) }
 
     DeleteTrainingUI(
         viewModel = berandaViewModel,
@@ -185,10 +183,11 @@ fun StateBerandaContent(
 
     state.showUIComposable(
         onLoading = {
+            val label =  if (!actionFromImport) "Download Data..."
+            else "Import Data..."
             LoadingContent(
                 modifier = Modifier.padding(paddingValues),
-                labelLoading = if (!actionFromImport) "Download Data..."
-                else "Import Data..."
+                labelLoading = label
             )
         },
         onSuccess = {
@@ -201,9 +200,7 @@ fun StateBerandaContent(
                 viewModel
             )
         },
-        onError = {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
+        onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
     )
 }
 
@@ -291,7 +288,7 @@ fun BerandaContent(
                 title = stringResource(R.string.hasil_rekomendasi),
                 image = painterResource(id = R.drawable.hasil),
                 onClick = {
-                    navHostController?.navigate(Screens.HasilUji.route)
+                    navHostController?.navigate(Screens.HasilUji.passBoolean())
                 }
             )
         }

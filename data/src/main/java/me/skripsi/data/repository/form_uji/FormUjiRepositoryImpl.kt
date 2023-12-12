@@ -7,7 +7,7 @@ import javax.inject.Inject
 class FormUjiRepositoryImpl @Inject constructor(
     private val dataSource: FormUjiDataSource
 ): FormUjiRepository {
-    override suspend fun saveDataUji(items: List<DataUji>): Boolean {
+    override suspend fun saveDataUji(items: List<DataUji>): List<DataUji> {
         return dataSource.saveDataUji(items)
     }
 
