@@ -19,4 +19,9 @@
     <string name="or">or</string>
     <string name="rekomendasi_beli">Rekomendasi Beli</string>
     <string name="hasil_rekomendasi">Hasil Rekomendasi</string>
+    <string name="ic_delete">ic_delete</string>
+    <string name="perhatian">Perhatian</string>
+    <string name="delete_training_msg">Apakah anda yakin ingin menghapus semua data training?</string>
+    <string name="ya">Ya</string>
+    <string name="tidak">Tidak</string>
 </resources>

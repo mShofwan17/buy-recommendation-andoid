@@ -151,10 +151,12 @@ fun FormDataUjiView(
                     text = if (dataUji.stok == 0) ""
                     else dataUji.stok.toString(),
                     onTextChange = {
-                        val convert = it.toInt()
-                        onDataChange(
-                            DataUjiChangedState.Stok(convert)
-                        )
+                        val convert = it.toIntOrNull()
+                        convert?.let {
+                            onDataChange(
+                                DataUjiChangedState.Stok(convert)
+                            )
+                        }
                     }
                 )
             }
@@ -189,10 +191,12 @@ fun FormDataUjiView(
                 text = if (dataUji.penjualan == 0) ""
                 else dataUji.penjualan.toString(),
                 onTextChange = {
-                    val convert = it.toInt()
-                    onDataChange(
-                        DataUjiChangedState.Penjualan(convert)
-                    )
+                    val convert = it.toIntOrNull()
+                    convert?.let {
+                        onDataChange(
+                            DataUjiChangedState.Penjualan(convert)
+                        )
+                    }
                 }
             )
         }

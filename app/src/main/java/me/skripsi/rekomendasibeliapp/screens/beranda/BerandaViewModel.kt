@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.skripsi.domain.usecases.beranda.CheckIsDataExistUseCase
+import me.skripsi.domain.usecases.beranda.DeleteAllDataTrainingUseCase
 import me.skripsi.domain.usecases.beranda.InsertDataUseCase
 import me.skripsi.domain.usecases.hasil_uji.DeleteAllUseCase
-import me.skripsi.domain.usecases.list_data.GetListDataTrainingUseCase
 import me.skripsi.domain.utils.ResponseState
 import me.skripsi.rekomendasibeliapp.ui.UiState
 import javax.inject.Inject
@@ -20,7 +20,8 @@ import javax.inject.Inject
 class BerandaViewModel @Inject constructor(
     private val checkIsDataExistUseCase: CheckIsDataExistUseCase,
     private val insertDataUseCase: InsertDataUseCase,
-    private val deleteAllUseCase: DeleteAllUseCase
+    private val deleteAllDataUjiUseCase: DeleteAllUseCase,
+    private val deleteAllDataTrainingUseCase: DeleteAllDataTrainingUseCase
 ) : ViewModel() {
 
     private val _insertDataState = MutableStateFlow<UiState<String>>(UiState())
@@ -28,6 +29,10 @@ class BerandaViewModel @Inject constructor(
 
     private val _isDataExist = MutableStateFlow<Boolean?>(null)
     val isDataExist get() = _isDataExist
+
+
+    private val _deleteDataTraining = MutableStateFlow<UiState<Boolean>>(UiState())
+    val deleteDataTraining get() = _deleteDataTraining
 
     init {
         checkIsDataExist()
@@ -42,7 +47,7 @@ class BerandaViewModel @Inject constructor(
                     }
                 }
 
-                isDataExist.value = it
+                _isDataExist.value = it
             }
         }
     }
@@ -53,13 +58,15 @@ class BerandaViewModel @Inject constructor(
             _insertDataState.update { uiState -> uiState.loading() }
             insertDataUseCase(filePath).collectLatest { result ->
                 _insertDataState.update { uiState ->
-                    when(result){
+                    when (result) {
                         is ResponseState.Loading -> {
                             uiState.loading()
                         }
+
                         is ResponseState.Success -> {
                             uiState.success("Data berhasil tersimpan")
                         }
+
                         is ResponseState.Error -> {
                             uiState.error(result.message)
                         }
@@ -71,9 +78,38 @@ class BerandaViewModel @Inject constructor(
         }
     }
 
-    fun deleteAll(){
+    fun deleteAll() {
         viewModelScope.launch {
-            deleteAllUseCase().collectLatest {  }
+            deleteAllDataUjiUseCase().collectLatest { }
         }
+    }
+
+    fun deleteAllDataTraining() {
+        viewModelScope.launch {
+            deleteAllDataTrainingUseCase().collectLatest { result ->
+                _deleteDataTraining.update { uiState ->
+                    when (result) {
+                        is ResponseState.Loading -> {
+                            uiState.loading()
+                        }
+
+                        is ResponseState.Success -> {
+                            uiState.success(result.data)
+                        }
+
+                        is ResponseState.Error -> {
+                            uiState.error(result.message)
+                        }
+
+                        else -> UiState()
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetStateImport(){
+        _isDataExist.update { false }
+        _deleteDataTraining.update { UiState() }
     }
 }

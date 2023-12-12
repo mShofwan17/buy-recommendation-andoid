@@ -15,15 +15,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,16 +61,41 @@ fun BerandaScreen(
     navHostController: NavHostController,
     berandaViewModel: BerandaViewModel = hiltViewModel()
 ) {
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
+
+    DeleteTrainingUI(
+        viewModel = berandaViewModel,
+        openDialog = openDialog,
+        openDialogState = {
+            openDialog = it
+        }
+    )
+
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.rekomendasi_beli),
                         color = Color.White
                     )
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Blue)
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Blue),
+                actions = {
+                    IconButton(
+                        onClick = {
+                            openDialog = true
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.ic_delete),
+                            tint = Color.White
+                        )
+                    }
+                }
             )
         },
     ) { paddingValues ->
@@ -111,30 +141,30 @@ fun BerandaScreen(
                     ) {
                         resultFile.launch("text/csv/*")
                     }
-/*
-                    Text(
-                        modifier = Modifier.padding(
-                            top = 10.dp,
-                            bottom = 10.dp
-                        ),
-                        text = stringResource(R.string.or)
-                    )
+                    /*
+                                        Text(
+                                            modifier = Modifier.padding(
+                                                top = 10.dp,
+                                                bottom = 10.dp
+                                            ),
+                                            text = stringResource(R.string.or)
+                                        )
 
-                    MyButton(
-                        title = stringResource(R.string.download_data),
-                        icon = Icons.Default.ArrowDropDown,
-                        backgroundColor = Color.Blue
-                    ) {
-                        actionFromImport = false
-                        berandaViewModel.insertDataTraining(null)
-                    }*/
+                                        MyButton(
+                                            title = stringResource(R.string.download_data),
+                                            icon = Icons.Default.ArrowDropDown,
+                                            backgroundColor = Color.Blue
+                                        ) {
+                                            actionFromImport = false
+                                            berandaViewModel.insertDataTraining(null)
+                                        }*/
                 }
             } else {
                 StateBerandaContent(
                     navHostController = navHostController,
                     paddingValues = paddingValues,
                     state = insertState.value,
-                    actionFromImport =  actionFromImport,
+                    actionFromImport = actionFromImport,
                     viewModel = berandaViewModel
                 )
             }
@@ -178,6 +208,46 @@ fun StateBerandaContent(
 }
 
 @Composable
+fun DeleteTrainingUI(
+    viewModel: BerandaViewModel,
+    openDialog: Boolean,
+    openDialogState: (Boolean) -> Unit = {}
+) {
+    val deleteResult by viewModel.deleteDataTraining.collectAsState()
+    val context = LocalContext.current
+
+    deleteResult.showUI(
+        onSuccess = {
+            viewModel.resetStateImport()
+        },
+        onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+    )
+
+    if (openDialog) {
+        AlertDialog(
+            title = { Text(text = stringResource(R.string.perhatian)) },
+            text = { Text(text = stringResource(R.string.delete_training_msg)) },
+            onDismissRequest = {
+                openDialogState.invoke(false)
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    openDialogState.invoke(false)
+                    viewModel.deleteAllDataTraining()
+                }) {
+                    Text(text = stringResource(R.string.ya))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { openDialogState.invoke(false) }) {
+                    Text(text = stringResource(R.string.tidak))
+                }
+            }
+        )
+    }
+}
+
+@Composable
 fun BerandaContent(
     modifier: Modifier,
     navHostController: NavHostController? = null,
@@ -201,14 +271,14 @@ fun BerandaContent(
                 .verticalScroll(rememberScrollState())
                 .weight(1f, false),
         ) {
-            CardHome(
+            /*CardHome(
                 title = stringResource(R.string.data_transaksi),
                 image = painterResource(id = R.drawable.transaction),
                 onClick = {
                     navHostController?.navigate(Screens.ListData.passBoolean(true))
                 }
             )
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.padding(10.dp))*/
             CardHome(
                 title = stringResource(R.string.data_tranining),
                 image = painterResource(id = R.drawable.training),
