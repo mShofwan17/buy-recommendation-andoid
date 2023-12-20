@@ -31,9 +31,9 @@ data class UiDataUji(
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,
-            stok = stok.labeledStok(),
+            stok = stok.toString(),
             isDiskon = isDiskon,
-            penjualan = penjualan.labeledPenjualan(),
+            penjualan = penjualan.toString(),
             pembelian = false
         )
     }
