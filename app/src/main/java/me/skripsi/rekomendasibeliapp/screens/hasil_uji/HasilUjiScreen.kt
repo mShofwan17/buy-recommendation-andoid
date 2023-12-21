@@ -1,6 +1,7 @@
 package me.skripsi.rekomendasibeliapp.screens.hasil_uji
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import me.skripsi.domain.ui_models.UiBuyRecommendation
 import me.skripsi.rekomendasibeliapp.R
@@ -35,17 +36,25 @@ import me.skripsi.rekomendasibeliapp.navigation.Screens
 @Composable
 fun HasilUjiScreen(
     navHostController: NavHostController,
-    viewModel: HasilUjiViewModel = hiltViewModel()
+    viewModel: HasilUjiViewModel = hiltViewModel(),
+    isFromHome: Boolean = false
 ) {
     val buyRecommendation by viewModel.buyRecommendation.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+    if (!isFromHome) {
+        BackHandler(true) {
+            Toast.makeText(context, "Tidak bisa kembali", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     buyRecommendation.showUIComposable(
         onLoading = {
             LoadingContent(
                 modifier = Modifier.fillMaxSize(),
-                labelLoading = "Menghitung Naive Bayes..."
+                labelLoading = if (!isFromHome) "Menghitung Naive Bayes..."
+                else "Mendapatkan Data..."
             )
         },
         onSuccess = {
@@ -59,7 +68,8 @@ fun HasilUjiScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    items = it
+                    items = it,
+                    navController = navHostController
                 )
                 Spacer(modifier = Modifier.padding(top = 8.dp, end = 8.dp))
                 MyButton(
@@ -68,9 +78,8 @@ fun HasilUjiScreen(
                     backgroundColor = Color.Blue
                 ) {
                     scope.launch {
-                       async {  viewModel.deleteAll() }.await()
-                        navHostController.navigate(Screens.Beranda.route){
-                            popUpTo(route = Screens.Beranda.route){
+                        navHostController.navigate(Screens.Beranda.route) {
+                            popUpTo(route = Screens.Beranda.route) {
                                 inclusive = true
                             }
                         }
@@ -87,7 +96,8 @@ fun HasilUjiScreen(
 @Composable
 fun ListBuyRecommendation(
     modifier: Modifier = Modifier,
-    items: List<UiBuyRecommendation>
+    items: List<UiBuyRecommendation>,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier,
@@ -95,7 +105,12 @@ fun ListBuyRecommendation(
     ) {
         items(items.size) {
             val item by remember { mutableStateOf(items[it]) }
-            ContentFormAndResult(buyRecommendation = item)
+            ContentFormAndResult(
+                buyRecommendation = item,
+                onClickContent = {
+                    navController.navigate(Screens.DetailHasilUji.passKodeBarang(kodeBarang = item.dataTraining?.kodeBarang))
+                }
+            )
         }
     }
 }

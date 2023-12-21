@@ -68,6 +68,7 @@ fun DataUjiEntity.toDataUji(): DataUji{
     }
 }
 
+/*
 fun ResultNaiveBayesEntity.toResultNaiveBayes() : ResultNaiveBayes {
     return ResultNaiveBayes(
         kodeBarang = kodeBarang,
@@ -75,4 +76,4 @@ fun ResultNaiveBayesEntity.toResultNaiveBayes() : ResultNaiveBayes {
         negativeResult = negativeResult,
         result = result
     )
-}
+}*/

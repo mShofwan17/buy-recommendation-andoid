@@ -1,6 +1,7 @@
 package me.skripsi.roomdb.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,4 +21,7 @@ interface DataUjiDao {
 
     @Query("DELETE FROM tb_data_uji")
     suspend fun deleteAll(): Int
+
+    @Delete
+    suspend fun delete(data: List<DataUjiEntity>): Int
 }

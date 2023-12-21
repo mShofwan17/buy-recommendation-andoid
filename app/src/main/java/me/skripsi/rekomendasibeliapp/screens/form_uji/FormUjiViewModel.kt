@@ -1,5 +1,6 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +69,13 @@ class FormUjiViewModel @Inject constructor(
                 _saveToDatabaseState.update { state ->
                     when (it) {
                         is ResponseState.Loading -> state.loading()
-                        is ResponseState.Success -> state.success(true)
+                        is ResponseState.Success -> {
+                            it.data?.let { uiDataUjis ->
+                                Log.i("TAG_dataUji", "saveSelectedData: ${uiDataUjis.size}")
+                                _dataUjis.update { uiDataUjis }
+                            }
+                            state.success(true)
+                        }
                         is ResponseState.Error -> state.error(message = it.message)
                     }
                 }
@@ -137,4 +144,7 @@ class FormUjiViewModel @Inject constructor(
         _insertDataUjiFromCsv.update { UiState() }
     }
 
+    fun isValidateForm(dataUji: List<UiDataUji>): Boolean {
+        return dataUji.all { it.penjualan != 0 && it.stok != 0 }
+    }
 }

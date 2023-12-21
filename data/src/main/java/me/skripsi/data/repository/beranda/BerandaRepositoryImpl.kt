@@ -13,4 +13,8 @@ class BerandaRepositoryImpl @Inject constructor(
     override suspend fun insertDataTraining(filePath: String?): Boolean {
         return dataSource.insertDataTraining(filePath)
     }
+
+    override suspend fun deleteAllDataTraining(): Boolean {
+        return dataSource.deleteAll()
+    }
 }

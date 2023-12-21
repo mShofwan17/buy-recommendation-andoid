@@ -1,5 +1,6 @@
 package me.skripsi.rekomendasibeliapp.screens.form_uji
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,11 +42,7 @@ fun FormUjiScreen(
 ) {
     val dataUjis by viewModel.dataUjis.collectAsState()
     val scope = rememberCoroutineScope()
-    //val context = LocalContext.current
-
-    /*BackHandler(true) {
-        Toast.makeText(context, "Tidak bisa kembali", Toast.LENGTH_SHORT).show()
-    }*/
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -65,11 +63,14 @@ fun FormUjiScreen(
             icon = Icons.Default.CheckCircle,
             backgroundColor = Color.Blue
         ) {
-            scope.launch {
-                async { viewModel.updateDataUji(dataUjis) }.await()
-                navHostController.navigate(Screens.HasilUji.route)
+            if (viewModel.isValidateForm(dataUjis)){
+                scope.launch {
+                    async { viewModel.updateDataUji(dataUjis) }.await()
+                    navHostController.navigate(Screens.HasilUji.passBoolean(false))
+                }
+            }else{
+                Toast.makeText(context, "Lengkapi Form terlebih dahulu!", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 }

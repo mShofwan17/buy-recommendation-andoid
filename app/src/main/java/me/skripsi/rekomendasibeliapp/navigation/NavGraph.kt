@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import me.skripsi.rekomendasibeliapp.screens.beranda.BerandaScreen
+import me.skripsi.rekomendasibeliapp.screens.detail_hasil_uji.DetailHasilUjiScreen
 import me.skripsi.rekomendasibeliapp.screens.form_uji.FormUjiScreen
 import me.skripsi.rekomendasibeliapp.screens.form_uji.ProductSelectedScreen
 import me.skripsi.rekomendasibeliapp.screens.hasil_uji.HasilUjiScreen
@@ -29,14 +30,32 @@ fun SetupNavGraph(navController: NavHostController) {
                 navController = navController
             )
         }
-        composable(route = Screens.ProductSelected.route){
+        composable(route = Screens.ProductSelected.route) {
             ProductSelectedScreen(navHostController = navController)
         }
-        composable(route = Screens.FormUji.route){
+        composable(route = Screens.FormUji.route) {
             FormUjiScreen(navHostController = navController)
         }
-        composable(route = Screens.HasilUji.route){
-            HasilUjiScreen(navHostController = navController)
+        composable(
+            route = Screens.HasilUji.route,
+            arguments = listOf(navArgument(name = "isFromHome") {
+                type = NavType.BoolType
+            })
+        ) {
+            it.arguments?.getBoolean("isFromHome")?.let { it1 ->
+                HasilUjiScreen(
+                    navHostController = navController,
+                    isFromHome = it1
+                )
+            }
+        }
+        composable(
+            route = Screens.DetailHasilUji.route,
+            arguments = listOf(
+                navArgument(name = "kodeBarang") { type = NavType.StringType }
+            )
+        ) {
+            DetailHasilUjiScreen(navController = navController)
         }
     }
 }

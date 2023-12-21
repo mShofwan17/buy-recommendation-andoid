@@ -25,7 +25,7 @@ class FormUjiDataSource @Inject constructor(
             val lines = csvReader.readAll()
             csvReader.close()
 
-             lines.drop(1).map {
+            lines.drop(1).map {
                 DataUji(
                     kodeBarang = it[0],
                     namaBarang = it[1],
@@ -38,14 +38,21 @@ class FormUjiDataSource @Inject constructor(
         }
     }
 
-    suspend fun saveDataUji(items: List<DataUji>): Boolean = runBlocking {
+    suspend fun saveDataUji(items: List<DataUji>): List<DataUji> = runBlocking {
         return@runBlocking validateResponse {
-            async {
-                items.forEach {
-                    dbSource.dataUji().addData(it.toDataUjiEntity())
-                }
-            }.await()
-            return@validateResponse dbSource.dataUji().getAll().isNotEmpty()
+            val localItems = dbSource.dataUji().getAll()
+            if (localItems.isEmpty()) {
+                async {
+                    items.forEach {
+                        dbSource.dataUji().addData(it.toDataUjiEntity())
+                    }
+                }.await()
+            } else {
+                dbSource.dataUji().deleteAll()
+                items.forEach { dbSource.dataUji().addData(it.toDataUjiEntity()) }
+            }
+
+            dbSource.dataUji().getAll().map { it.toDataUji() }
         }
     }
 

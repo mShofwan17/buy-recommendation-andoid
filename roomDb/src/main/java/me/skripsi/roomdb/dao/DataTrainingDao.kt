@@ -18,4 +18,7 @@ interface DataTrainingDao {
 
     @Delete
     suspend fun delete(dataTraining: DataTrainingEntity): Int
+
+    @Query("DELETE FROM tb_data_training")
+    suspend fun deleteAll(): Int
 }

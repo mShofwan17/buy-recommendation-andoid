@@ -28,9 +28,11 @@ class ResultNaiveBayesDataSource @Inject constructor(
 
                         val result = ResultNaiveBayes(
                             kodeBarang = it.kodeBarang,
-                            positiveResult = positive,
-                            negativeResult = negative,
-                            result = resultNaiveBayes(positive, negative)
+                            positiveResult = positive.result,
+                            negativeResult = negative.result,
+                            result = resultNaiveBayes(positive.result, negative.result),
+                            detailPositive = positive,
+                            detailNegative = negative
                         )
                         results.add(result)
                     }

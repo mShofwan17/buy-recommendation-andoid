@@ -17,4 +17,7 @@ interface DataTransaksiDao {
 
     @Delete
     suspend fun delete(dataTransaksiEntity: DataTransaksiEntity): Int
+
+    @Query("DELETE FROM tb_data_transaksi")
+    suspend fun deleteAll(): Int
 }

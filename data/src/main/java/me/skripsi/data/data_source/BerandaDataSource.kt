@@ -1,5 +1,6 @@
 package me.skripsi.data.data_source
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.opencsv.CSVReaderBuilder
@@ -21,8 +22,8 @@ class BerandaDataSource @Inject constructor(
 ) : BaseDateSource() {
     suspend fun checkDataExist(): Boolean = runBlocking {
         return@runBlocking validateResponse {
-            val items = async { dbSource.dataTransaksiDao().getAllTransaction() }.await()
-            return@validateResponse items.isNotEmpty()
+            val items = async { dbSource.dataTransaksiDao().getAllTransaction() }
+            items.await().isNotEmpty()
         }
     }
 
@@ -59,6 +60,15 @@ class BerandaDataSource @Inject constructor(
                     dbSource.dataTrainingDao().addDataTraining(transaksi.toDataTrainingEntity())
                 }
             dbSource.dataTrainingDao().getAllDataTraining().isNotEmpty()
+        }
+    }
+
+    fun deleteAll(): Boolean = runBlocking {
+        validateResponse {
+            val training = async { dbSource.dataTrainingDao().deleteAll() }
+            val transaksi = async { dbSource.dataTransaksiDao().deleteAll() }
+
+            training.await() != -1 && transaksi.await() != -1
         }
     }
 }
