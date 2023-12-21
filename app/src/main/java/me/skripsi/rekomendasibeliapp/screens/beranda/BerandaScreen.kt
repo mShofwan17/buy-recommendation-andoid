@@ -28,7 +28,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,10 +49,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import me.skripsi.rekomendasibeliapp.R
 import me.skripsi.rekomendasibeliapp.components.CardHome
+import me.skripsi.rekomendasibeliapp.components.HtmlText
 import me.skripsi.rekomendasibeliapp.components.LoadingContent
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
 import me.skripsi.rekomendasibeliapp.ui.UiState
+import me.skripsi.rekomendasibeliapp.utils.constant.ContentConst
 import me.skripsi.rekomendasibeliapp.utils.toRealPath
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,30 +134,26 @@ fun BerandaScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        text = "Selamat Datang di Aplikasi Rekomendasi Beli",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                    HtmlText(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        html = ContentConst.WELCOME_HTML
+                    )
                     MyButton(
-                        title = stringResource(R.string.import_from_csv),
+                        title = stringResource(R.string.import_data_training),
                         icon = Icons.Default.List,
                         backgroundColor = Color.Green
                     ) {
                         resultFile.launch("text/csv/*")
                     }
-                    /*
-                                        Text(
-                                            modifier = Modifier.padding(
-                                                top = 10.dp,
-                                                bottom = 10.dp
-                                            ),
-                                            text = stringResource(R.string.or)
-                                        )
-
-                                        MyButton(
-                                            title = stringResource(R.string.download_data),
-                                            icon = Icons.Default.ArrowDropDown,
-                                            backgroundColor = Color.Blue
-                                        ) {
-                                            actionFromImport = false
-                                            berandaViewModel.insertDataTraining(null)
-                                        }*/
                 }
             } else {
                 StateBerandaContent(
@@ -183,7 +181,7 @@ fun StateBerandaContent(
 
     state.showUIComposable(
         onLoading = {
-            val label =  if (!actionFromImport) "Download Data..."
+            val label = if (!actionFromImport) "Download Data..."
             else "Import Data..."
             LoadingContent(
                 modifier = Modifier.padding(paddingValues),
@@ -277,7 +275,7 @@ fun BerandaContent(
             )
             Spacer(modifier = Modifier.padding(10.dp))*/
             CardHome(
-                title = stringResource(R.string.data_tranining),
+                title = stringResource(R.string.see_data_tranining),
                 image = painterResource(id = R.drawable.training),
                 onClick = {
                     navHostController?.navigate(Screens.ListData.passBoolean(false))
@@ -285,7 +283,7 @@ fun BerandaContent(
             )
             Spacer(modifier = Modifier.padding(10.dp))
             CardHome(
-                title = stringResource(R.string.hasil_rekomendasi),
+                title = stringResource(R.string.see_hasil_rekomendasi),
                 image = painterResource(id = R.drawable.hasil),
                 onClick = {
                     navHostController?.navigate(Screens.HasilUji.passBoolean())

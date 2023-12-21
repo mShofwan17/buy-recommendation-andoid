@@ -3,6 +3,8 @@
     <string name="image_home">image_home</string>
     <string name="data_transaksi">Data Transaksi</string>
     <string name="data_tranining">Data Training</string>
+    <string name="see_data_transaksi">Lihat Data Transaksi</string>
+    <string name="see_data_tranining">Lihat Data Training</string>
     <string name="uji_data">Uji Data</string>
     <string name="icon_button">icon_button</string>
     <string name="cirlce_icon">cirlce_icon</string>
@@ -13,15 +15,18 @@
     <string name="penjualan">Penjualan</string>
     <string name="kembali_ke_beranda">Kembali ke Beranda</string>
     <string name="lanjut">Lanjut</string>
+    <string name="import_data_training">Import Data Training</string>
     <string name="import_from_csv">Import From CSV</string>
     <string name="loading_import_data_uji">Import file data uji…</string>
     <string name="download_data">Download Data</string>
     <string name="or">or</string>
     <string name="rekomendasi_beli">Rekomendasi Beli</string>
     <string name="hasil_rekomendasi">Hasil Rekomendasi</string>
+    <string name="see_hasil_rekomendasi">Lihat Hasil Rekomendasi</string>
     <string name="ic_delete">ic_delete</string>
     <string name="perhatian">Perhatian</string>
     <string name="delete_training_msg">Apakah anda yakin ingin menghapus semua data training?</string>
     <string name="ya">Ya</string>
     <string name="tidak">Tidak</string>
+    <string name="back_icon">back_icon</string>
 </resources>
