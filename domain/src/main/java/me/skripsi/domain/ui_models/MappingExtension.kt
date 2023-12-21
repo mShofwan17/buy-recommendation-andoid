@@ -3,12 +3,13 @@ package me.skripsi.domain.ui_models
 import me.skripsi.data.models.DataTraining
 import me.skripsi.data.models.DataTransaksi
 import me.skripsi.data.models.DataUji
+import me.skripsi.data.models.DetailResultNaiveBayes
 import me.skripsi.data.models.ResultNaiveBayes
 import me.skripsi.data.naiveBayes.recommendation
 
-fun DataTransaksi.toUiDataTransaksi() : UiDataTransaksi{
+fun DataTransaksi.toUiDataTransaksi(): UiDataTransaksi {
     this.apply {
-        return  UiDataTransaksi(
+        return UiDataTransaksi(
             id = id,
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
@@ -20,9 +21,10 @@ fun DataTransaksi.toUiDataTransaksi() : UiDataTransaksi{
         )
     }
 }
+
 fun DataTraining.toUiDataTraining(): UiDataTraining {
     this.apply {
-        return  UiDataTraining(
+        return UiDataTraining(
             id = id,
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
@@ -35,7 +37,7 @@ fun DataTraining.toUiDataTraining(): UiDataTraining {
     }
 }
 
-fun DataTransaksi.toUiProductSelected(): UiProductSelected{
+fun DataTransaksi.toUiProductSelected(): UiProductSelected {
     this.apply {
         return UiProductSelected(
             kodeBarang = kodeBarang,
@@ -45,10 +47,10 @@ fun DataTransaksi.toUiProductSelected(): UiProductSelected{
     }
 }
 
-fun DataUji.toUiDataUji(): UiDataUji{
+fun DataUji.toUiDataUji(): UiDataUji {
     this.apply {
         return UiDataUji(
-            id= id,
+            id = id,
             kodeBarang = kodeBarang,
             namaBarang = namaBarang,
             golongan = golongan,
@@ -59,7 +61,7 @@ fun DataUji.toUiDataUji(): UiDataUji{
     }
 }
 
-fun ResultNaiveBayes.toBuyRecommendation(dataTraining: UiDataTraining?): UiBuyRecommendation{
+fun ResultNaiveBayes.toBuyRecommendation(dataTraining: UiDataTraining?): UiBuyRecommendation {
     this.apply {
         return UiBuyRecommendation(
             dataTraining = dataTraining,
@@ -67,8 +69,22 @@ fun ResultNaiveBayes.toBuyRecommendation(dataTraining: UiDataTraining?): UiBuyRe
             negativeResult = negativeResult,
             result = result,
             recommendation = result.recommendation(),
-            negativeCalculate = detailNegative,
-            positiveCalculate = detailPositive
+            negativeCalculate = detailNegative.toUiDetailResultNaiveBayes(),
+            positiveCalculate = detailPositive.toUiDetailResultNaiveBayes()
+        )
+    }
+}
+
+fun DetailResultNaiveBayes.toUiDetailResultNaiveBayes(): UiDetailResultNaiveBayes {
+    this.apply {
+        return UiDetailResultNaiveBayes(
+            isPositive,
+            kodeBarang,
+            persediaan,
+            diskon,
+            penjualan,
+            size,
+            result
         )
     }
 }

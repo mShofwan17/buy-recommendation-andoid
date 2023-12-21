@@ -53,7 +53,8 @@ fun HasilUjiScreen(
         onLoading = {
             LoadingContent(
                 modifier = Modifier.fillMaxSize(),
-                labelLoading = "Menghitung Naive Bayes..."
+                labelLoading = if (!isFromHome) "Menghitung Naive Bayes..."
+                else "Mendapatkan Data..."
             )
         },
         onSuccess = {

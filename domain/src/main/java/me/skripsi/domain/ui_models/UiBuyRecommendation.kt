@@ -9,6 +9,6 @@ data class UiBuyRecommendation(
     val negativeResult: BigDecimal,
     val result: Boolean,
     val recommendation: String,
-    val positiveCalculate: DetailResultNaiveBayes,
-    val negativeCalculate: DetailResultNaiveBayes
+    val positiveCalculate: UiDetailResultNaiveBayes,
+    val negativeCalculate: UiDetailResultNaiveBayes
 )
