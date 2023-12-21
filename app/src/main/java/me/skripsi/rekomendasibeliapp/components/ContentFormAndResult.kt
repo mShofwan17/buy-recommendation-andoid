@@ -2,6 +2,7 @@ package me.skripsi.rekomendasibeliapp.components
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,9 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import me.skripsi.domain.ui_models.UiBuyRecommendation
 import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.rekomendasibeliapp.R
+import me.skripsi.rekomendasibeliapp.navigation.Screens
 import me.skripsi.rekomendasibeliapp.utils.DataUjiChangedState
 import me.skripsi.rekomendasibeliapp.utils.VerticalSmallLabelBigContentState
 import me.skripsi.rekomendasibeliapp.utils.viewDiskonLabel
@@ -36,7 +39,8 @@ fun ContentFormAndResult(
     modifier: Modifier = Modifier,
     dataUji: UiDataUji? = null,
     buyRecommendation: UiBuyRecommendation? = null,
-    onDataChange: (DataUjiChangedState) -> Unit = {}
+    onDataChange: (DataUjiChangedState) -> Unit = {},
+    onClickContent: () -> Unit = {}
 ) {
     val kode = dataUji?.kodeBarang ?: buyRecommendation?.dataTraining?.kodeBarang
     val nama = dataUji?.namaBarang ?: buyRecommendation?.dataTraining?.namaBarang
@@ -50,7 +54,9 @@ fun ContentFormAndResult(
                 if (dataUji != null) Modifier.clip(shape = RoundedCornerShape(8.dp))
                 else Modifier.clip(shape = RoundedCornerShape(12.dp))
             )
-
+            .clickable {
+                buyRecommendation?.let { onClickContent() }
+            }
             .background(Color.White)
     ) {
         Column(
@@ -275,7 +281,7 @@ fun ResultBuyRecommendationView(
 @Preview
 @Composable
 fun ContentFormDataUjiPrev() {
-    val data = UiDataUji(
+    /*val data = UiDataUji(
         kodeBarang = "0006585",
         namaBarang = "Chil Go Steril Coklat 140ml",
         golongan = "MAKANAN",
@@ -286,7 +292,7 @@ fun ContentFormDataUjiPrev() {
 
     ContentFormAndResult(dataUji = data) {
 
-    }
+    }*/
 }
 
 @Preview

@@ -11,6 +11,10 @@ class HasilUjiRepositoryImpl @Inject constructor(
         return dataSource.calculateNaiveBayes()
     }
 
+    override suspend fun getDetailResultNaiveBayes(kodeBarang: String): ResultNaiveBayes? {
+        return dataSource.calculateNaiveBayes().find { it.kodeBarang == kodeBarang }
+    }
+
     override suspend fun deleteAll(): Boolean {
         return dataSource.deleteAll()
     }

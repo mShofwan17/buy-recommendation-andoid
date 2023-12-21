@@ -8,6 +8,8 @@ data class ResultNaiveBayes(
     val positiveResult: BigDecimal,
     val negativeResult: BigDecimal,
     val result: Boolean,
+    val detailPositive: DetailResultNaiveBayes,
+    val detailNegative: DetailResultNaiveBayes,
 ){
     fun toResultNaiveBayesEntity() : ResultNaiveBayesEntity {
         return ResultNaiveBayesEntity(

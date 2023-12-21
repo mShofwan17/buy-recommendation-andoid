@@ -9,7 +9,11 @@ import me.skripsi.rekomendasibeliapp.utils.constant.ScreenConst.PRODUCT_SELECTED
 
 sealed class Screens(val route: String) {
     object Beranda : Screens(BERANDA)
-    object DetailHasilUji : Screens(DETAIL_HASIL_UJI)
+    object DetailHasilUji : Screens("$DETAIL_HASIL_UJI/{kodeBarang}"){
+        fun passKodeBarang(kodeBarang: String?): String  {
+            return "$DETAIL_HASIL_UJI/$kodeBarang"
+        }
+    }
     object ProductSelected : Screens(PRODUCT_SELECTED)
     object FormUji : Screens(FORM_UJI)
     object HasilUji : Screens("$HASIL_UJI/{isFromHome}") {

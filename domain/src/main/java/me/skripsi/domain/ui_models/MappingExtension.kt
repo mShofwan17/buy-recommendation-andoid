@@ -66,7 +66,9 @@ fun ResultNaiveBayes.toBuyRecommendation(dataTraining: UiDataTraining?): UiBuyRe
             positiveResult = positiveResult,
             negativeResult = negativeResult,
             result = result,
-            recommendation = result.recommendation()
+            recommendation = result.recommendation(),
+            negativeCalculate = detailNegative,
+            positiveCalculate = detailPositive
         )
     }
 }

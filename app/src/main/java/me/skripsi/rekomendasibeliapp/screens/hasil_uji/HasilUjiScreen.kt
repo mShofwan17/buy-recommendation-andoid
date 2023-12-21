@@ -23,8 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import me.skripsi.domain.ui_models.UiBuyRecommendation
 import me.skripsi.rekomendasibeliapp.R
@@ -43,7 +43,7 @@ fun HasilUjiScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    if (!isFromHome){
+    if (!isFromHome) {
         BackHandler(true) {
             Toast.makeText(context, "Tidak bisa kembali", Toast.LENGTH_SHORT).show()
         }
@@ -67,7 +67,8 @@ fun HasilUjiScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    items = it
+                    items = it,
+                    navController = navHostController
                 )
                 Spacer(modifier = Modifier.padding(top = 8.dp, end = 8.dp))
                 MyButton(
@@ -94,7 +95,8 @@ fun HasilUjiScreen(
 @Composable
 fun ListBuyRecommendation(
     modifier: Modifier = Modifier,
-    items: List<UiBuyRecommendation>
+    items: List<UiBuyRecommendation>,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier,
@@ -102,7 +104,12 @@ fun ListBuyRecommendation(
     ) {
         items(items.size) {
             val item by remember { mutableStateOf(items[it]) }
-            ContentFormAndResult(buyRecommendation = item)
+            ContentFormAndResult(
+                buyRecommendation = item,
+                onClickContent = {
+                    navController.navigate(Screens.DetailHasilUji.passKodeBarang(kodeBarang = item.dataTraining?.kodeBarang))
+                }
+            )
         }
     }
 }

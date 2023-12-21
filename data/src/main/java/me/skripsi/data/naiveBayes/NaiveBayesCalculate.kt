@@ -2,13 +2,14 @@ package me.skripsi.data.naiveBayes
 
 import me.skripsi.data.models.DataTraining
 import me.skripsi.data.models.DataUjiCalculate
+import me.skripsi.data.models.DetailResultNaiveBayes
 import java.math.BigDecimal
 
 object NaiveBayesCalculate {
     fun calculatePositive(
         dataUji: DataUjiCalculate,
         items: List<DataTraining>
-    ): BigDecimal {
+    ): DetailResultNaiveBayes {
         items.apply {
             val positive = allTrueCount().toDouble()
 
@@ -19,15 +20,22 @@ object NaiveBayesCalculate {
             val positiveSize = (positive /size.toDouble()).decimalFormat()
 
             val result = persediaan * promosi * penjualan * positiveSize
-            return result.toBigDecimal().decimalFormat()
-            //return result
+            return DetailResultNaiveBayes(
+                isPositive = true,
+                kodeBarang = dataUji.kodeBarang,
+                persediaan = persediaan.toBigDecimal(),
+                diskon = promosi.toBigDecimal(),
+                penjualan = penjualan.toBigDecimal(),
+                size = positiveSize.toBigDecimal(),
+                result = result.toBigDecimal().decimalFormat()
+            )
         }
     }
 
     fun calculateNegative(
         dataUji: DataUjiCalculate,
         items: List<DataTraining>
-    ): BigDecimal {
+    ): DetailResultNaiveBayes {
         items.apply {
             val negative = allFalseCount().toDouble()
 
@@ -38,8 +46,15 @@ object NaiveBayesCalculate {
             val negativeSize = (negative /size.toDouble()).decimalFormat()
 
             val result = persediaan * promosi * penjualan * negativeSize
-            return result.toBigDecimal().decimalFormat()
-            // return result
+            return DetailResultNaiveBayes(
+                isPositive = false,
+                kodeBarang = dataUji.kodeBarang,
+                persediaan = persediaan.toBigDecimal(),
+                diskon = promosi.toBigDecimal(),
+                penjualan = penjualan.toBigDecimal(),
+                size = negativeSize.toBigDecimal(),
+                result = result.toBigDecimal().decimalFormat()
+            )
         }
     }
     fun resultNaiveBayes(

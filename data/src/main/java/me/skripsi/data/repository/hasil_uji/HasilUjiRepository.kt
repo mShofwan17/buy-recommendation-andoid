@@ -4,5 +4,7 @@ import me.skripsi.data.models.ResultNaiveBayes
 
 interface HasilUjiRepository {
     suspend fun getResultNaiveBayes(): List<ResultNaiveBayes>
+
+    suspend fun getDetailResultNaiveBayes(kodeBarang: String): ResultNaiveBayes?
     suspend fun deleteAll(): Boolean
 }
