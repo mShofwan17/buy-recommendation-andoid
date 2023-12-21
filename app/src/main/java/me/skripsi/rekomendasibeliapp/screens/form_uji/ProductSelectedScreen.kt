@@ -9,10 +9,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -33,12 +39,16 @@ import me.skripsi.domain.ui_models.UiDataUji
 import me.skripsi.domain.ui_models.UiProductSelected
 import me.skripsi.rekomendasibeliapp.R
 import me.skripsi.rekomendasibeliapp.components.CardProductSelected
+import me.skripsi.rekomendasibeliapp.components.GeneralTopAppBar
+import me.skripsi.rekomendasibeliapp.components.HtmlText
 import me.skripsi.rekomendasibeliapp.components.LoadingContent
 import me.skripsi.rekomendasibeliapp.components.MyButton
 import me.skripsi.rekomendasibeliapp.navigation.Screens
 import me.skripsi.rekomendasibeliapp.ui.UiState
+import me.skripsi.rekomendasibeliapp.utils.constant.ContentConst
 import me.skripsi.rekomendasibeliapp.utils.toRealPath
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductSelectedScreen(
     navHostController: NavHostController,
@@ -49,7 +59,8 @@ fun ProductSelectedScreen(
     val importDataUjiResults by viewModel.insertDataUjiFromCsv.collectAsState()
     val saveDataUjiState by viewModel.saveToDatabaseState.collectAsState()
     val context = LocalContext.current
-    var openDialog by remember {
+    var openDialog by remember { mutableStateOf(false) }
+    var layout by remember {
         mutableStateOf(false)
     }
 
@@ -65,63 +76,116 @@ fun ProductSelectedScreen(
             }
         )
     }
+    Scaffold(
+        topBar = {
+            GeneralTopAppBar(
+                title = stringResource(id = R.string.uji_data),
+                onBackPressed = {
+                    navHostController.popBackStack()
+                }
+            )
+        }
+    ){
+        Box(modifier = Modifier.padding(it)){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                saveDataUjiState.showUIComposable(
+                    onInit = {
+                        if (!layout){
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 10.dp),
+                                text = "Input Data Uji",
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold
+                            )
+                            HtmlText(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 10.dp),
+                                html = ContentConst.MESSAGE_DATA_UJI_HTML
+                            )
+                            StateButtonImportFromCsv(
+                                state = importDataUjiResults,
+                                viewModel = viewModel
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight(),
+                                text = "Atau",
+                                textAlign = TextAlign.Center
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .padding(
+                                        top = 16.dp,
+                                        bottom = 16.dp,
+                                        end = 24.dp,
+                                        start = 24.dp
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                MyButton(
+                                    title = "Pilih Barang",
+                                    icon = Icons.Default.Check,
+                                    backgroundColor = Color.Blue
+                                ) {
+                                    layout = true
+                                }
+                            }
+                        }else{
+                            StateListSelectedProduct(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                productState = productState,
+                                selectedProduct = selectedProduct,
+                                viewModel = viewModel
+                            )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+                            MyButton(
+                                title = stringResource(R.string.lanjut),
+                                backgroundColor = Color.Blue
+                            ) {
+                                val itemsSelected = selectedProduct.filter { it.isSelected }
+                                val dataUji = itemsSelected.map { it.toDataUji() }
 
+                                if (itemsSelected.isNotEmpty()) {
+                                    saveDataUji(
+                                        viewModel,
+                                        dataUji
+                                    )
+                                } else {
+                                    openDialog = true
+                                }
+                            }
+                        }
 
-        saveDataUjiState.showUIComposable(
-            onInit = {
-                StateButtonImportFromCsv(
-                    state = importDataUjiResults,
-                    viewModel = viewModel
+                    },
+                    onLoading = {
+                        LoadingContent(labelLoading = stringResource(R.string.loading_import_data_uji))
+                    },
+                    onSuccess = {
+                        if (it) {
+                            viewModel.resetStateInsertCsv().also {
+                                navHostController.navigate(Screens.FormUji.route)
+                            }
+
+                        }
+
+                    },
+                    onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
                 )
 
-                StateListSelectedProduct(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    productState = productState,
-                    selectedProduct = selectedProduct,
-                    viewModel = viewModel
-                )
-
-                MyButton(
-                    title = stringResource(R.string.lanjut),
-                    backgroundColor = Color.Blue
-                ) {
-                    val itemsSelected = selectedProduct.filter { it.isSelected }
-                    val dataUji = itemsSelected.map { it.toDataUji() }
-
-                    if (itemsSelected.isNotEmpty()) {
-                        saveDataUji(
-                            viewModel,
-                            dataUji
-                        )
-                    } else {
-                        openDialog = true
-                    }
-                }
-            },
-            onLoading = {
-                LoadingContent(labelLoading = stringResource(R.string.loading_import_data_uji))
-            },
-            onSuccess = {
-                if (it) {
-                    viewModel.resetStateInsertCsv().also {
-                        navHostController.navigate(Screens.FormUji.route)
-                    }
-
-                }
-
-            },
-            onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-        )
-
+            }
+        }
     }
+
 }
 
 @Composable
@@ -159,7 +223,7 @@ fun StateButtonImportFromCsv(
         contentAlignment = Alignment.Center,
     ) {
         MyButton(
-            title = stringResource(R.string.import_from_csv),
+            title = stringResource(R.string.import_data_uji),
             icon = Icons.Default.List,
             backgroundColor = Color.Green,
             contentLoading = isLoading

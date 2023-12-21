@@ -31,4 +31,43 @@ object ContentConst {
 </html>
 
     """
+
+    const val MESSAGE_DATA_UJI_HTML = """
+       <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <p>Anda memiliki dua opsi untuk menginput data uji ke dalam aplikasi:</p>
+    
+   <br>
+
+    <p>
+        <strong>1. Import Data Uji dari CSV:</strong>
+        Pilih opsi "Import Data Uji" di menu utama. Pilih file CSV yang berisi data uji Anda. Tunggu sebentar hingga proses impor selesai.
+    </p>
+    
+    <br>
+
+    <p>
+        <strong>2. Pilih Barang Secara Manual:</strong>
+        Pilih opsi "Pilih Barang" di menu utama. Pilih barang dari daftar yang tersedia. Isi formulir dengan detail seperti isDiskon, jumlah stok, dan jumlah penjualan.
+    </p>
+    
+   <br>
+
+    <p>
+        Anda dapat memilih salah satu dari dua opsi ini sesuai dengan kebutuhan Anda.
+    </p>
+
+   <br>
+    
+    <p>Terima kasih!</p>
+
+</body>
+
+</html>
+    """
 }
