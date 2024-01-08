@@ -128,9 +128,11 @@ fun CardListData(
                             Text(
                                 modifier = Modifier.padding(end = 6.dp),
                                 text = "$stok",
-                                color = if (isDataTransaksi) Color.Black.copy(alpha = 0.5f)
+                                color = if (isDataTransaksi) Color.Black
                                 else stok.toString().colorProbabilitas(),
-                                fontSize = MaterialTheme.typography.titleSmall.fontSize
+                                fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                                fontWeight =
+                                if (isDataTransaksi) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     )

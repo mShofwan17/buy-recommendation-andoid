@@ -67,8 +67,9 @@ class BerandaDataSource @Inject constructor(
         validateResponse {
             val training = async { dbSource.dataTrainingDao().deleteAll() }
             val transaksi = async { dbSource.dataTransaksiDao().deleteAll() }
+            val dataUji = async { dbSource.dataUji().deleteAll() }
 
-            training.await() != -1 && transaksi.await() != -1
+            training.await() != -1 && transaksi.await() != -1 && dataUji.await() != -1
         }
     }
 }

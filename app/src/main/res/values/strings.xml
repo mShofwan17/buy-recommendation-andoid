@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Rekomendasi Beli App</string>
     <string name="image_home">image_home</string>
+    <string name="data_stok">Data Stok Barang</string>
     <string name="data_transaksi">Data Transaksi</string>
     <string name="data_tranining">Data Training</string>
     <string name="see_data_transaksi">Lihat Data Transaksi</string>

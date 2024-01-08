@@ -266,14 +266,14 @@ fun BerandaContent(
                 .verticalScroll(rememberScrollState())
                 .weight(1f, false),
         ) {
-            /*CardHome(
-                title = stringResource(R.string.data_transaksi),
+            CardHome(
+                title = stringResource(R.string.data_stok),
                 image = painterResource(id = R.drawable.transaction),
                 onClick = {
                     navHostController?.navigate(Screens.ListData.passBoolean(true))
                 }
             )
-            Spacer(modifier = Modifier.padding(10.dp))*/
+            Spacer(modifier = Modifier.padding(10.dp))
             CardHome(
                 title = stringResource(R.string.see_data_tranining),
                 image = painterResource(id = R.drawable.training),

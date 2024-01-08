@@ -29,6 +29,7 @@ class ListDataViewModel @Inject constructor(
 
     fun getDataTransaksi() {
         viewModelScope.launch {
+            _dataTransaksiState.update { it.loading() }
             getListDataTransaksiUseCase().collectLatest {
                 _dataTransaksiState.update { state ->
                     state.success(it)

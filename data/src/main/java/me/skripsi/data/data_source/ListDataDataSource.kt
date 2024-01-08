@@ -1,6 +1,10 @@
 package me.skripsi.data.data_source
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
+import me.skripsi.data.jsonDataMentah
+import me.skripsi.data.models.DataTransaksi
 import me.skripsi.roomdb.BuyRecommendationDatabase
 import me.skripsi.roomdb.entity.DataTrainingEntity
 import me.skripsi.roomdb.entity.DataTransaksiEntity
@@ -11,7 +15,8 @@ class ListDataDataSource @Inject constructor(
 ) : BaseDateSource() {
     suspend fun getDataTransaksi(): List<DataTransaksiEntity> = runBlocking {
         return@runBlocking validateResponse {
-            dbSource.dataTransaksiDao().getAllTransaction()
+            val listType = object : TypeToken<List<DataTransaksiEntity>>() {}.type
+            Gson().fromJson<List<DataTransaksiEntity>>(jsonDataMentah,listType)
         }
     }
 
